@@ -42,8 +42,15 @@ const Hero = () => {
 
       <div className="flex justify-center relative my-20 z-10">
         <div className="max-w-[89vw] md:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center">
+          <div>
+            <img
+              src="/logo.svg"
+              alt="Logo Najm Studio"
+              className="h-[40px] w-[40px] mb-5"
+            />
+          </div>
           <p className="uppercase tracking-widest text-xs text-center text-blue-100 max-w-80">
-            Dynamic Web Magic with Next.js
+            najm studio
           </p>
 
           {/**
@@ -52,17 +59,21 @@ const Hero = () => {
            *  change md:text-6xl, add more responsive code
            */}
           <TextGenerateEffect
-            words="Transforming Concepts into Seamless User Experiences"
+            words="Notre mission: transformer vos idées en réalité"
             className="text-center text-[40px] md:text-5xl lg:text-6xl"
           />
 
           <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
-            Hi! I&apos;m Adrian, a Next.js Developer based in Croatia.
+            Discutons ensemble de votre projet et voyons comme nous pouvons vous
+            aider بإذن الله
           </p>
 
-          <a href="#about">
+          <a
+            href="https://calendly.com/contactnajmstudio/15min"
+            target="_blank"
+          >
             <MagicButton
-              title="Show my work"
+              title="Consultation gratuite"
               icon={<FaLocationArrow />}
               position="right"
             />

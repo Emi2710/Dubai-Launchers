@@ -1,14 +1,15 @@
 export const navItems = [
-  { name: "About", link: "#about" },
-  { name: "Projects", link: "#projects" },
-  { name: "Testimonials", link: "#testimonials" },
+  { name: "Nous", link: "#about" },
+  { name: "Projets", link: "#projects" },
+  { name: "Témoignages", link: "#testimonials" },
   { name: "Contact", link: "#contact" },
 ];
 
 export const gridItems = [
   {
     id: 1,
-    title: "I prioritize client collaboration, fostering open communication ",
+    title:
+      "Des solutions créatives qui respectent les normes de notre religion ",
     description: "",
     className: "lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
     imgClassName: "w-full h-full",
@@ -18,7 +19,7 @@ export const gridItems = [
   },
   {
     id: 2,
-    title: "I'm very flexible with time zone communications",
+    title: "Une approche individuelle et personnalisée",
     description: "",
     className: "lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
@@ -28,8 +29,8 @@ export const gridItems = [
   },
   {
     id: 3,
-    title: "My tech stack",
-    description: "I constantly try to improve",
+    title: "Compétences",
+    description: "Nous améliorons toujours nos",
     className: "lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-center",
@@ -38,7 +39,7 @@ export const gridItems = [
   },
   {
     id: 4,
-    title: "Tech enthusiast with a passion for development.",
+    title: "Une équipe dynamique et enthousiate, à votre écoute",
     description: "",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
@@ -49,17 +50,16 @@ export const gridItems = [
 
   {
     id: 5,
-    title: "Currently building a JS Animation library",
-    description: "The Inside Scoop",
+    title: "Nous nous adaptons à votre budget et à vos besoins 🤝",
+    description: "Relation humaine",
     className: "md:col-span-3 md:row-span-2",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
     titleClassName: "justify-center md:justify-start lg:justify-center",
-    img: "/b5.svg",
     spareImg: "/grid.svg",
   },
   {
     id: 6,
-    title: "Do you want to start a project together?",
+    title: "Discutons ensemble de ce que vous souhaitez",
     description: "",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
@@ -72,68 +72,59 @@ export const gridItems = [
 export const projects = [
   {
     id: 1,
-    title: "3D Solar System Planets to Explore",
-    des: "Explore the wonders of our solar system with this captivating 3D simulation of the planets using Three.js.",
-    img: "/p1.svg",
-    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/fm.svg"],
-    link: "/ui.earth.com",
+    title: "Plateforme de Muslima Skills",
+    des: "Plateforme dédiée à l'emploi de la femme musulmane",
+    img: "/p1.png",
+
+    link: "https://muslimaskills.com",
   },
   {
     id: 2,
-    title: "Yoom - Video Conferencing App",
-    des: "Simplify your video conferencing experience with Yoom. Seamlessly connect with colleagues and friends.",
-    img: "/p2.svg",
-    iconLists: ["/next.svg", "/tail.svg", "/ts.svg", "/stream.svg", "/c.svg"],
-    link: "/ui.yoom.com",
+    title: "Site de Dourous Abu Imran",
+    des: "Enseignement de la langue arabe et des sciences religieuses",
+    img: "/p2.png",
+
+    link: "https://dourous-abuimran.com",
   },
   {
     id: 3,
-    title: "AI Image SaaS - Canva Application",
-    des: "A REAL Software-as-a-Service app with AI features and a payments and credits system using the latest tech stack.",
-    img: "/p3.svg",
-    iconLists: ["/re.svg", "/tail.svg", "/ts.svg", "/three.svg", "/c.svg"],
-    link: "/ui.aiimg.com",
+    title: "Branding de Brill Auto",
+    des: "Identité graphique l'entreprise de nettoyage automobile Brill Auto",
+    img: "/p3.png",
+
+    link: "https://www.behance.net/gallery/172824687/BrillAuto-car-detail-company-logo-and-UI-design",
   },
   {
-    id: 4,
-    title: "Animated Apple Iphone 3D Website",
-    des: "Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects..",
-    img: "/p4.svg",
-    iconLists: ["/next.svg", "/tail.svg", "/ts.svg", "/three.svg", "/gsap.svg"],
-    link: "/ui.apple.com",
+    id: 3,
+    title: "Identité graphique de Neqaxo",
+    des: "Identité graphique et gestion des réseaux sociaux de Neqaxo",
+    img: "/p4.jpg",
+
+    link: "https://www.instagram.com/neqaxo.lar/",
   },
 ];
 
 export const testimonials = [
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "Tout ce que l'on attend d'une collaboration !Umm Khadijah et Diya ont été au top tout au long du processus de création de site. N'y connaissant pas grand chose et manquant cruellement de temps, elles ont tout pris en main du design jusqu'à la mise en place de toutes les fonctionnalités du site. Elles ont pris des initiatives intelligentes concernant les options du site et sont toujours revenu vers nous pour valider les décisions importantes. Le résultat est a la hauteur 👌🏻✨",
+    name: "Lina Pratlong",
+    img: "/t1.jpg",
+    title: "Site de Dourous Abu Imran",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "J’ai confié à umm Khadijah un projet très complexe. Je me doutais qu’il faudrait une développeuse web très expérimentée pour mon site. Au début, j’avais quelques craintes, mais lorsque j’ai vu pour la première fois le site qu’elle a codé, j’étais É-P-A-T-É 🔥🔥 ! C’était beaucoup d’émotion et de fierté 🥹 Bravo et merci encore pour ce travail professionnel ✨",
+    name: "Rayhan Khassieva",
+    img: "/t3.svg",
+    title: "Site de Muslima Skills",
   },
   {
     quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
-  },
-  {
-    quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
-  },
-  {
-    quote:
-      "Collaborating with Adrian was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Adrian's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Adrian is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      "En très peu de temps, un site a été créé pour notre école. Des corrections rapides, une approche professionnelle et un travail de qualité ont été effectués. Tous les détails ont été discutés et résolus instantanément. Ce site est maintenant bénéfique pour de nombreuses personnes, merci beaucoup ! Je ferai appel de nouveau.",
+    name: "Hava M.",
+    img: "/t3.png",
+    title: "Site de Darul Huffaz",
   },
 ];
 

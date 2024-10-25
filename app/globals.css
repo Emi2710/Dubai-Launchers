@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -82,4 +86,8 @@
   .heading {
     @apply font-bold text-4xl md:text-5xl text-center;
   }
+}
+
+body {
+    font-family: "Azeret Mono", monospace;
 }
