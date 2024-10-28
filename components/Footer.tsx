@@ -23,7 +23,7 @@ const Footer = () => {
         </h1>
         <p className="text-white-200 md:mt-10 my-5 text-center">
           N&apos;hésitez pas à nous contacter pour plus de questions, c&apos;est
-          gratuit et on est gentil :)
+          gratuit et on est gentils :)
         </p>
         <a href="https://calendly.com/contactnajmstudio/15min" target="_blank">
           <MagicButton
