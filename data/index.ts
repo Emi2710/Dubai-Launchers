@@ -102,6 +102,14 @@ export const projects = [
 
     link: "https://www.instagram.com/neqaxo.lar/",
   },
+  {
+    id: 3,
+    title: "Landing page de Rizqi Coaching",
+    des: "Développement de la landing page de Rizqi Coaching",
+    img: "/p5.png",
+
+    link: "https://rizqi.co/",
+  },
 ];
 
 export const testimonials = [
@@ -125,6 +133,13 @@ export const testimonials = [
     name: "Hava M.",
     img: "/t3.png",
     title: "Site de Darul Huffaz",
+  },
+  {
+    quote:
+      "Umm Khadija a su réaliser exactement ce que nous souhaitions pour le site, en mettant parfaitement en place nos idées tout en respectant notre branding. Elle a apporté toutes les corrections nécessaires avec une grande écoute, toujours disponible et réactive. Sa rapidité d’exécution et sa communication efficace ont rendu la collaboration très professionnelle. Je recommande vivement son travail et repasserai par elle pour mes prochains sites in shaa Allah 👍💯",
+    name: "Rafiq",
+    img: "/t4.png",
+    title: "Site de Rizqi Co",
   },
 ];
 
