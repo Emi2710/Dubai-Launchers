@@ -1,26 +1,16 @@
-import { gridItems } from "@/data";
-import { BentoGrid, BentoGridItem } from "./ui/BentoGrid";
+import { gridItems } from "@/data"; // Import the gridItems data
+import BentoGridTimeline from "./ui/BentoGridTimeline";
 
 const Grid = () => {
   return (
-    <section id="about">
-      <BentoGrid className="w-full py-20">
-        {gridItems.map((item, i) => (
-          <BentoGridItem
-            id={item.id}
-            key={i}
-            title={item.title}
-            description={item.description}
-            // remove icon prop
-            // remove original classname condition
-            className={item.className}
-            img={item.img}
-            imgClassName={item.imgClassName}
-            titleClassName={item.titleClassName}
-            spareImg={item.spareImg}
-          />
-        ))}
-      </BentoGrid>
+    <section id="guide">
+      <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mt-20">
+        Comment ça marche ?
+      </h2>
+      <div className="w-full pb-20 mt-10">
+        {/* Correctly passing gridItems as an array */}
+        <BentoGridTimeline items={gridItems} />
+      </div>
     </section>
   );
 };

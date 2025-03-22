@@ -3,8 +3,28 @@
 @tailwind utilities;
 
 
-@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+  font-family: "Inter Tight";
+  src: url("/font/InterTight-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: "Inter Tight";
+  src: url("/font/InterTight-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("/font/InterTight-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
 
 @layer base {
   :root {
@@ -89,5 +109,23 @@
 }
 
 body {
-    font-family: "Azeret Mono", monospace;
+    font-family: "Inter Tight", sans-serif;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(147, 51, 234, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(147, 51, 234, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(147, 51, 234, 0.3);
+  }
+}
+
+.timeline-dot-active {
+  animation: glow 2s infinite;
 }

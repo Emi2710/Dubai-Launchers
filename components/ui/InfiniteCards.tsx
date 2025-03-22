@@ -14,7 +14,6 @@ export const InfiniteMovingCards = ({
     quote: string;
     name: string;
     img: string;
-    title: string;
   }[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
@@ -127,10 +126,6 @@ export const InfiniteMovingCards = ({
                   {/* change text color, font-normal to font-bold, text-xl */}
                   <span className="text-xl font-bold leading-[1.6] text-white">
                     {item.name}
-                  </span>
-                  {/* change text color */}
-                  <span className=" text-sm leading-[1.6] text-white-200 font-normal">
-                    {item.title}
                   </span>
                 </span>
               </div>

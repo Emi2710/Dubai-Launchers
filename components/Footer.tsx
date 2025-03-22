@@ -1,6 +1,5 @@
 import { FaLocationArrow } from "react-icons/fa6";
 
-import { socialMedia } from "@/data";
 import MagicButton from "./MagicButton";
 import Link from "next/link";
 
@@ -22,10 +21,9 @@ const Footer = () => {
           <span className="text-purple"> doutes ou des questions ?</span>
         </h1>
         <p className="text-white-200 md:mt-10 my-5 text-center">
-          N&apos;hésitez pas à nous contacter pour plus de questions, c&apos;est
-          gratuit et on est gentils :)
+          N&apos;hésitez pas à nous contacter
         </p>
-        <a href="https://calendly.com/contactnajmstudio/15min" target="_blank">
+        <a href="#" target="_blank">
           <MagicButton
             title="Prendre contact"
             icon={<FaLocationArrow />}
@@ -35,17 +33,8 @@ const Footer = () => {
       </div>
       <div className="flex mt-16 md:flex-row flex-col justify-between items-center">
         <p className="md:text-base text-sm md:font-normal font-light">
-          Copyright © 2024 Najm Studio
+          Copyright © 2025 Dubai Launchers
         </p>
-
-        <Link
-          href="mailto:najmstudio@gmail.com"
-          className="flex items-center md:gap-3 gap-6"
-        >
-          <p className="underline w-10 h-10 cursor-pointer flex justify-center items-center  rounded-lg">
-            contactnajmstudio@gmail.com
-          </p>
-        </Link>
       </div>
     </footer>
   );

@@ -26,6 +26,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        interTight: ["Inter Tight", "sans-serif"],
+      },
       colors: {
         black: {
           DEFAULT: "#000",
