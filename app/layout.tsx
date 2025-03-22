@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { ThemeProvider } from "./provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import WhatsappButton from "@/components/ui/WhatsappButton";
 
 export const metadata: Metadata = {
   title: "Dubaï Launchers - Votre société à Dubaï en un temps record",
@@ -30,6 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <WhatsappButton />
         </ThemeProvider>
       </body>
     </html>
