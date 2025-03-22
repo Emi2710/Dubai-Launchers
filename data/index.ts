@@ -113,18 +113,33 @@ export const testimonials = [
 
 export const faqData = [
   {
-    question: "What is Lorem Ipsum?",
+    question: "Lorem ipsum dolor sit amet?",
     answer:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. It has been the industry's standard dummy text ever since the 1500s.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac vestibulum erat. Donec euismod, nisi eu consectetur consectetur, nisl nunc consectetur nisi.",
   },
   {
-    question: "Why do we use it?",
+    question: "Curabitur non nulla sit amet nisl tempus?",
     answer:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+      "Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.",
   },
   {
-    question: "Where can I get some?",
+    question: "Quis autem vel eum iure reprehenderit?",
     answer:
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.",
+      "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas.",
+  },
+  {
+    question: "Sed ut perspiciatis unde omnis iste natus?",
+    answer:
+      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.",
+  },
+  {
+    question: "Ut enim ad minima veniam, quis nostrum?",
+    answer:
+      "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?",
+  },
+  {
+    question: "Duis aute irure dolor in reprehenderit?",
+    answer:
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.",
   },
 ];

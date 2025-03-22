@@ -7,9 +7,9 @@ import { ThemeProvider } from "./provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Najm studio - L'agence qui illumine vos projets",
+  title: "Dubaï Launchers - Votre société à Dubaï en un temps record",
   description:
-    "Que vous soyez une entreprise, une association ou un entrepreneur visionnaire, nous créons des identités digitales et des marques fortes qui rayonnent avec authenticité et impact.",
+    "On s'occupe de tout: licence de votre société, visa, comptes bancaires et plus encore. Lancez votre société sans effort, sans paperasse et en un temps record.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/logo.svg" sizes="any" />
+        <link rel="icon" href="/logo/2.png" sizes="any" />
       </head>
       <body>
         <ThemeProvider
