@@ -64,7 +64,7 @@ const About = () => {
         </div>
       </div>
       <div>
-        <p className="text-center mt-16 mb-5 text-sm md:text-lg font-bold leading-[150%]">
+        <p className="text-center mt-16 mb-5 text-sm md:text-lg font-bold leading-[150%] max-w-[850px] mx-auto">
           Chez Dubai Launchers, vous bénéficiez de l’offre la plus rapide, la
           plus complète et la mieux accompagnée du marché – à un tarif que
           personne ne peut égaler.
