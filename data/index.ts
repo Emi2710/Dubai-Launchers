@@ -18,7 +18,7 @@ export const gridItems = [
     ],
     delai: "5-10 jours ouvrés",
     presence: "100% à distance",
-    img: "/b1.svg",
+    img: "/icons/1.png",
   },
 
   {
@@ -31,7 +31,7 @@ export const gridItems = [
     ],
     delai: "5-10 jours ouvrés",
     presence: "100% à distance",
-    img: "/b1.svg",
+    img: "/icons/2.png",
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ export const gridItems = [
     ],
     delai: "2-3 jours ouvrés (VIP 24-48h)",
     presence: "À Dubaï pour la biométrie",
-    img: "/b1.svg",
+    img: "/icons/3.png",
   },
   {
     id: 4,
@@ -54,7 +54,7 @@ export const gridItems = [
     ],
     delai: "24-48h ouvrés",
     presence: "À Dubaï pour la biométrie",
-    img: "/b1.svg",
+    img: "/icons/4.png",
   },
   {
     id: 5,
@@ -67,26 +67,28 @@ export const gridItems = [
     ],
     delai: "Environ 2-3 semaines",
     presence: "Uniquement pour la biométrie (Visa)",
-    img: "/b1.svg",
+    img: "/icons/5.png",
   },
 ];
 
 export const challenges = {
   against: [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "Curabitur pretium tincidunt lacus.",
+    "2 à 4 semaines sur place à dubaï pour le visa.",
+    "Aide à l’ouverture bancaire rarement, voire jamais proposée.  ",
+    "Offre partielle, démarches à gérer seul et frais cachés.    ",
+    "Support standard, lent et impersonnel",
+    "Aucun enregistrement à la Corporate Tax (⚠️ 10 000 AED d’amende si non fait à temps) ",
+    "Pas de numéro de téléphone local, ni de tampon officiel pour votre société.",
+    "Aucun accompagnement pour visa famille.",
   ],
   for: [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "Curabitur pretium tincidunt lacus.",
+    "Visa VIP & express en 1 à 2 jours ouvrés",
+    "Ouverture des comptes bancaires avec vous, pas à pas : ✔Compte personnel Émirati ✔Compte professionnel Émirati ✔Compte professionnel européen",
+    "Pack 100 % clé en main, Dubaï Launchers s’occupe de tout",
+    "Suivi premium avec interlocuteur dédié disponible pendant et après le processus",
+    "Enregistrement Corporate Tax inclus et géré",
+    "Numéro local Émirati + tampon officiel (physique & numérique) inclus",
+    "Option d’accompagnement pour sponsoriser la famille (si projet d’installation aux Émirats)",
   ],
 };
 

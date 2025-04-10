@@ -5,9 +5,17 @@ import { challenges } from "@/data";
 const About = () => {
   return (
     <div id="about" className="relative py-16">
-      <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mb-16 text-white">
+      <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mb-10 text-white">
         Pourquoi nous ?
       </h2>
+
+      <div>
+        <p className="text-center mb-16 text-sm md:text-lg font-bold leading-[150%] text-gray-300">
+          Basée sur une comparaison réelle des offres du marché : <br />{" "}
+          Comparez par vous-même ce que nous proposons en plus par rapport aux
+          autres agences.
+        </p>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4">
         {/* Comparison Table */}
@@ -19,7 +27,18 @@ const About = () => {
                 <div className="text-red-500 mt-1 flex-shrink-0">
                   <X size={22} />
                 </div>
-                <div className="text-gray-200 text-base">{challenge}</div>
+                <div className="text-gray-200 text-base">
+                  {challenge.split(", ").map((part, i) => {
+                    if (i === 1) {
+                      return (
+                        <span key={i} className="">
+                          , {part}
+                        </span>
+                      );
+                    }
+                    return <span key={i}>{part}</span>;
+                  })}
+                </div>
               </div>
 
               {/* "For" column */}
@@ -31,7 +50,7 @@ const About = () => {
                   {challenges.for[index].split(", ").map((part, i) => {
                     if (i === 1) {
                       return (
-                        <span key={i} className="text-gray-400">
+                        <span key={i} className="">
                           , {part}
                         </span>
                       );
@@ -43,6 +62,16 @@ const About = () => {
             </React.Fragment>
           ))}
         </div>
+      </div>
+      <div>
+        <p className="text-center mt-16 mb-5 text-sm md:text-lg font-bold leading-[150%]">
+          Chez Dubai Launchers, vous bénéficiez de l’offre la plus rapide, la
+          plus complète et la mieux accompagnée du marché – à un tarif que
+          personne ne peut égaler.
+        </p>
+        <p className="text-center mb-10 text-sm md:text-lg font-bold leading-[150%]">
+          Le meilleur service. Au meilleur prix. Par les meilleurs.
+        </p>
       </div>
     </div>
   );
