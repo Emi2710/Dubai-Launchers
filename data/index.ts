@@ -41,7 +41,7 @@ export const gridItems = [
       " Validation biométrique & médicale à Dubaï",
       " Obtention de la carte d’immigration & Emirates ID",
     ],
-    delai: "2-3 jours ouvrés (VIP 24-48h)",
+    delai: "2-3 jours ouvrés",
     presence: "À Dubaï pour la biométrie",
     img: "/icons/3.png",
   },
@@ -65,50 +65,115 @@ export const gridItems = [
       " Accompagnement sur la mise en route & conformité",
       "  Commencez vos activités immédiatement",
     ],
-    delai: "Environ 2-3 semaines",
-    presence: "Uniquement pour la biométrie (Visa)",
+    totalTime:
+      "L’ensemble du processus prend environ 2 à 3 semaines. Votre présence à Dubaï est uniquement requise pour la biométrie liée au visa.",
     img: "/icons/5.png",
   },
 ];
 
 export const challenges = {
   against: [
-    "2 à 4 semaines sur place à dubaï pour le visa.",
-    "Aide à l’ouverture bancaire rarement, voire jamais proposée.  ",
-    "Offre partielle, démarches à gérer seul et frais cachés.    ",
-    "Support standard, lent et impersonnel",
-    "Aucun enregistrement à la Corporate Tax (⚠️ 10 000 AED d’amende si non fait à temps) ",
-    "Pas de numéro de téléphone local, ni de tampon officiel pour votre société.",
-    "Aucun accompagnement pour visa famille.",
+    "-2 à 4 semaines sur place- pour le visa",
+    "*Pas d'aide* à l’ouverture bancaire",
+    "Aucun enregistrement à la Corporate Tax (-⚠️ 10 000 AED d’amende)- ",
+    "Support *lent et impersonnel*",
+    "Offre partielle, *frais cachés*    ",
+    "Pas de -numéro local-, ni de -tampon officiel-",
+    "*Aucun accompagnement* pour visa famille",
   ],
   for: [
-    "Visa VIP & express en 1 à 2 jours ouvrés",
-    "Ouverture des comptes bancaires avec vous, pas à pas : ✔Compte personnel Émirati ✔Compte professionnel Émirati ✔Compte professionnel européen",
-    "Pack 100 % clé en main, Dubaï Launchers s’occupe de tout",
-    "Suivi premium avec interlocuteur dédié disponible pendant et après le processus",
-    "Enregistrement Corporate Tax inclus et géré",
-    "Numéro local Émirati + tampon officiel (physique & numérique) inclus",
-    "Option d’accompagnement pour sponsoriser la famille (si projet d’installation aux Émirats)",
+    "*Visa VIP en 1 à 2 jours ouvrés*, présence uniquement pour biométrie",
+    "-Ouverture guidée:- compte perso, pro émirati et pro européen",
+    "Enregistrement Corporate Tax *géré et inclus*",
+    "Interloctuteur *dédié, support premium*",
+    "Pack *100 % clé en main,* -zéro surprise-",
+    "Numéro local + tampon officiel inclus",
+    "*Option d’accompagnement* pour la famille",
   ],
 };
 
 export const testimonials = [
   {
-    quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque condimentum nisi nec blandit suscipit. Phasellus et blandit eros, ut ornare odio. Fusce quis nunc id metus suscipit maximus. Fusce non ipsum urna. Fusce aliquet lacinia nibh non accumsan. Integer blandit massa non mauris tristique rhoncus. Aenean viverra sollicitudin felis, quis gravida mi rutrum a. Mauris interdum vitae dolor bibendum mattis.",
-    name: "Abu Fulan",
+    quote: `Tout a été parfait de A à Z. J’ai pu obtenir exactement ce que je voulais : Emirates ID, société, comptes bancaires, comptabilité gérée, enregistrement à la Corporate Tax… tout était clair, fluide et super bien organisé.
+
+Le staff a toujours été dispo quand j’en avais besoin, la discussion sur WhatsApp est ultra réactive, et j’ai même pu les rencontrer directement sur place à Dubaï.
+
+Ce qui m’a marqué, c’est la rapidité du service. J’avais des contraintes de temps très strictes (impossible pour moi de rester plus de deux semaines sur place), et pourtant tout a été géré en un temps record.
+
+Mais le vrai plus… c’est le réseau. Grâce à eux, j’ai aujourd’hui un réseau de dingue à Dubaï, dans tous les domaines. J’avais comparé avec plein d'autres agences avant de me lancer, mais aucune ne m’a proposé ce niveau de service. Rien à redire : rapide, carré, humain, et hyper efficace.
+
+Je suis moi-même venu grâce à une recommandation, et aujourd’hui, je recommande à 1000 % !`,
+
+    name: "Rafiq",
+    job: "Marketing Digital",
     img: "bg.png",
   },
   {
-    quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque condimentum nisi nec blandit suscipit. Phasellus et blandit eros, ut ornare odio. Fusce quis nunc id metus suscipit maximus. Fusce non ipsum urna. Fusce aliquet lacinia nibh non accumsan. Integer blandit massa non mauris tristique rhoncus. Aenean viverra sollicitudin felis, quis gravida mi rutrum a. Mauris interdum vitae dolor bibendum mattis.",
-    name: "Abu Fulan",
+    quote: `Le service a été ultra rapide et professionnel. J’ai eu quelques petits soucis administratifs liés à mes propres papiers, mais malgré ça, l’équipe a su rester patiente et gérer l’imprévu qui venait de moi, dans les temps et sans pression.
+
+    J’ai pu faire 100 % des démarches à distance, sans avoir besoin de me déplacer, car la configuration de notre société permettait à mon associé de se rendre sur place pour l’ouverture sans ma présence. Et tout s’est déroulé parfaitement. Organisation fluide, réactivité au top, rien à redire, je recommande.`,
+    name: "Mohamed-Amine",
+    job: "Créateur de contenu",
     img: "/bg.png",
   },
   {
-    quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque condimentum nisi nec blandit suscipit. Phasellus et blandit eros, ut ornare odio. Fusce quis nunc id metus suscipit maximus. Fusce non ipsum urna. Fusce aliquet lacinia nibh non accumsan. Integer blandit massa non mauris tristique rhoncus. Aenean viverra sollicitudin felis, quis gravida mi rutrum a. Mauris interdum vitae dolor bibendum mattis.",
-    name: "Abu Fulan",
+    quote: `
+ 	Nous tenons à témoigner de notre grande satisfaction quant à l’accompagnement offert par Hosni et son équipe pour le développement d’activités et l’expansion sur le marché de Dubaï. Dès le premier contact, leur expertise et leur écoute attentive nous ont permis d’explorer de nouvelles opportunités commerciales en toute clarté et efficacité. Nous recommandons vivement leur approche personnalisée, professionnelle et réactive à toute personne souhaitant étendre son activité dans cette région.
+
+  Bien à vous.`,
+    name: "Saber",
+    job: "Trader",
+    img: "/bg.png",
+  },
+  {
+    quote: `J’avais besoin de faire les formalités rapidement et tout a été fait en moins d’une semaine, le process est très fluide et on est accompagnés à chaque étape. Hosni s’est occupé de tout ce dont j’avais besoin pour m’installer aux Émirats (même ce à quoi je n’avais pas pensé) et a été réactif quand j’avais des questions, je recommande ses services`,
+    name: "Nahel",
+    job: "Apps & IT",
+    img: "/bg.png",
+  },
+  {
+    quote: `Un énorme merci à Hosni pour l'aide que tu m'as apporté pour la création de mon entreprise à Dubaï. Ta réactivité et ton professionnalisme ont vraiment fait la différence. Tout s’est déroulé comme sur des roulettes et dans les temps, j'ai pu recevoir mon Émirats ID en seulement deux jours. Grâce à toi aujourd’hui, je peux me concentrer sur mon entreprise sans me soucier du reste.
+
+    Même après presque un an, tu restes réactif et tu répond à toutes mes questions dans la journée. BarakAllahou fik!`,
+    name: "Ahmed",
+    job: "I.T",
+    img: "/bg.png",
+  },
+  {
+    quote: `Au départ j’avais une crainte de l’inconnu et beaucoup de préjugés négatifs concernant Dubaï.
+    J’ai découvert un pays où les valeurs sont respectées et la sécurité présente.
+    Le côté entreprise, Hosni s’est occupé de tout de A à Z, toutes les démarches ont été faites dans la journée.
+    Un accueil chaleureux, bienveillant et Hosni toujours présent à chaque question, disponible pour trouver des solutions à nos demandes.
+    Aucun regret.`,
+    name: "Dalila",
+    job: "Consultante",
+    img: "/bg.png",
+  },
+  {
+    quote: `Un immense remerciement pour l’ouverture de ma société à Dubaï.
+Je vous remercie sincèrement pour l’implication et le travail que vous avez effectué.
+Ma sœur et moi avions sélectionné, à la suite de multiples recherches, le nom qui semblait réellement digne de tout ce qu’il offre.
+
+Hosni a été à l’écoute de mes attentes et appréhensions.
+Il a su me rassurer et par l’exemple même apaiser mon doute et mes craintes.
+Les démarches ont été fluides (Emirates ID, ouverture des comptes bancaires, le numéro local, le mail et le cachet de l’entreprise...).
+
+Je recommanderai vos services à tous les entrepreneurs début ou non.
+C’est par les valeurs d’écoute, de transparence et de rigueur qu’Hosni a su répondre à toutes nos attentes, et toujours dans les délais impartis.
+
+Prenez soin de vous et continuez ainsi avec ce professionnalisme.
+Je remercie Allah d’avoir pu croiser votre chemin et je vous souhaite le meilleur.
+Grâce à vous, je peux aujourd’hui continuer mon expansion ici à Dubaï.`,
+    name: "Safiya",
+    job: "Infopreneuse",
+    img: "/bg.png",
+  },
+  {
+    quote: `L’accompagnement de Hosni a été inestimable pour mon installation aux Émirats.
+Grâce à sa connaissance approfondie des procédures administratives et à son dévouement, tout s’est déroulé sans accroc.
+Son soutien a grandement facilité ma transition et je lui en suis très reconnaissant.`,
+    name: "Ahmed",
+    job: "Infopreneur",
     img: "/bg.png",
   },
 ];

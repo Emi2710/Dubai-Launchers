@@ -3,6 +3,56 @@ import { Check, X } from "lucide-react";
 import { challenges } from "@/data";
 
 const About = () => {
+  function formatText(text: string): React.ReactNode[] {
+    const regex = /(\*-.*?-\*|\*.*?\*|-.*?-)/g;
+    const result: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      const index = match.index;
+
+      // Ajouter le texte entre les balises trouvées
+      if (index > lastIndex) {
+        result.push(
+          <span key={lastIndex}>{text.slice(lastIndex, index)}</span>
+        );
+      }
+
+      const raw = match[0];
+      let content = raw;
+      let isBold = raw.startsWith("*") || raw.endsWith("*");
+      let isUnderline = raw.startsWith("-") || raw.endsWith("-");
+
+      // Nettoyage des balises * et -
+      content = content
+        .replace(/^\*?-/, "")
+        .replace(/-\*?$/, "")
+        .replace(/^\*/, "")
+        .replace(/\*$/, "");
+
+      let node: React.ReactNode = content;
+      if (isUnderline) node = <u key={index}>{node}</u>;
+      if (isBold) node = <strong key={index}>{node}</strong>;
+      if (isBold && isUnderline)
+        node = (
+          <strong key={index}>
+            <u>{content}</u>
+          </strong>
+        );
+
+      result.push(node);
+      lastIndex = index + raw.length;
+    }
+
+    // Ajouter le reste du texte s’il en reste
+    if (lastIndex < text.length) {
+      result.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
+    }
+
+    return result;
+  }
+
   return (
     <div id="about" className="relative py-16">
       <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mb-10 text-white">
@@ -28,16 +78,7 @@ const About = () => {
                   <X size={22} />
                 </div>
                 <div className="text-gray-200 text-base">
-                  {challenge.split(", ").map((part, i) => {
-                    if (i === 1) {
-                      return (
-                        <span key={i} className="">
-                          , {part}
-                        </span>
-                      );
-                    }
-                    return <span key={i}>{part}</span>;
-                  })}
+                  {formatText(challenge)}
                 </div>
               </div>
 
@@ -47,16 +88,7 @@ const About = () => {
                   <Check size={22} />
                 </div>
                 <div className="text-gray-200 text-base">
-                  {challenges.for[index].split(", ").map((part, i) => {
-                    if (i === 1) {
-                      return (
-                        <span key={i} className="">
-                          , {part}
-                        </span>
-                      );
-                    }
-                    return <span key={i}>{part}</span>;
-                  })}
+                  {formatText(challenges.for[index])}
                 </div>
               </div>
             </React.Fragment>

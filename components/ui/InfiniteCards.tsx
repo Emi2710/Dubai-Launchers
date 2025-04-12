@@ -13,6 +13,7 @@ export const InfiniteMovingCards = ({
   items: {
     quote: string;
     name: string;
+    job: string;
     img: string;
   }[];
   direction?: "left" | "right";
@@ -65,7 +66,7 @@ export const InfiniteMovingCards = ({
       } else if (speed === "normal") {
         containerRef.current.style.setProperty("--animation-duration", "40s");
       } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s");
+        containerRef.current.style.setProperty("--animation-duration", "150s");
       }
     }
   };
@@ -110,23 +111,21 @@ export const InfiniteMovingCards = ({
                 className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
               {/* change text color, text-lg */}
-              <span className=" relative z-20 text-sm md:text-lg leading-[1.6] text-white font-normal">
-                {item.quote}
-              </span>
+              <div className="relative z-20 text-sm md:text-lg leading-[1.6] text-white font-normal space-y-4">
+                {item.quote.split("\n\n").map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
+
               <div className="relative z-20 mt-6 flex flex-row items-center">
                 {/* add this div for the profile img */}
-                <div className="me-3">
-                  <img
-                    src={item.img}
-                    alt="profile"
-                    className="w-[50px] h-[50px] rounded-[50%]"
-                  />
-                </div>
+
                 <span className="flex flex-col gap-1">
                   {/* change text color, font-normal to font-bold, text-xl */}
                   <span className="text-xl font-bold leading-[1.6] text-white">
                     {item.name}
                   </span>
+                  {item.job}
                 </span>
               </div>
             </blockquote>

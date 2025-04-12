@@ -81,7 +81,7 @@ const Hero = () => {
             Plus de
             <span className="text-[#af94fff5] font-bold uppercase">
               {" "}
-              1k+ entrepreneurs
+              50+ entrepreneurs
             </span>{" "}
             <span className="font-bold"></span> nous ont déjà fait confiance et
             ont économisé des millions d&apos;euros d&apos;impôts...

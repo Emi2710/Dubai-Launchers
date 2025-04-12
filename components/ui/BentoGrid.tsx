@@ -7,6 +7,7 @@ interface BentoGridItemProps {
   description: React.ReactNode; // This ensures that description can accept an array of <li> elements
   delai: string;
   presence: string;
+  totalTime: string;
   isActive?: boolean; // Added for animation
 }
 
@@ -17,6 +18,7 @@ const BentoGridItem = ({
   description,
   delai,
   presence,
+  totalTime,
   isActive = false,
 }: BentoGridItemProps) => {
   return (
@@ -52,12 +54,36 @@ const BentoGridItem = ({
           </ul>
         </div>
         <div className="mt-4 space-y-1">
-          <p className="text-gray-200 font-light">
-            <span className="font-medium">Délais:</span> {delai}
-          </p>
-          <p className="text-gray-200 font-light">
-            <span className="font-medium">Présence:</span> {presence}
-          </p>
+          {delai && (
+            <>
+              <p className="text-gray-200 font-light">
+                <span className="font-medium">Délais:</span> {delai}
+              </p>
+            </>
+          )}
+
+          {presence && (
+            <>
+              <p className="text-gray-200 font-light">
+                <span className="font-medium">Présence:</span> {presence}
+              </p>
+            </>
+          )}
+
+          {totalTime && (
+            <>
+              <div className="text-gray-200 font-light">
+                <p className="font-medium">Résumé global du processus:</p>{" "}
+                L’ensemble du processus prend environ{" "}
+                <span className="underline">2 à 3 semaines.</span>
+                <p className="mt-5 text-[#af94fff5] font-bold">
+                  {" "}
+                  Votre présence à Dubaï est uniquement requise pour la
+                  biométrie liée au visa.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
