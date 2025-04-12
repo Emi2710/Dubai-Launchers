@@ -7,7 +7,7 @@ interface BentoGridItemProps {
   description: React.ReactNode; // This ensures that description can accept an array of <li> elements
   delai: string;
   presence: string;
-  totalTime: string;
+  totalTime?: string;
   isActive?: boolean; // Added for animation
 }
 
