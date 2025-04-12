@@ -142,7 +142,7 @@ Je suis moi-même venu grâce à une recommandation, et aujourd’hui, je recomm
 
     Même après presque un an, tu restes réactif et tu répond à toutes mes questions dans la journée. BarakAllahou fik!`,
     name: "Ahmed",
-    job: "I.T",
+    job: "IT",
     img: "/bg.png",
   },
   {
