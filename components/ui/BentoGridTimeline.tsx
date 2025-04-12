@@ -10,6 +10,7 @@ interface TimelineItem {
   img: string;
   description: React.ReactNode;
   delai: string;
+  totalTime: string;
   presence: string;
 }
 
