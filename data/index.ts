@@ -18,6 +18,7 @@ export const gridItems = [
     ],
     delai: "5-10 jours ouvrés",
     presence: "100% à distance",
+    totalTime: "",
     img: "/icons/1.png",
   },
 
@@ -31,6 +32,7 @@ export const gridItems = [
     ],
     delai: "5-10 jours ouvrés",
     presence: "100% à distance",
+    totalTime: "",
     img: "/icons/2.png",
   },
   {
@@ -43,6 +45,7 @@ export const gridItems = [
     ],
     delai: "2-3 jours ouvrés",
     presence: "À Dubaï pour la biométrie",
+    totalTime: "",
     img: "/icons/3.png",
   },
   {
@@ -54,6 +57,7 @@ export const gridItems = [
     ],
     delai: "24-48h ouvrés",
     presence: "À Dubaï pour la biométrie",
+    totalTime: "",
     img: "/icons/4.png",
   },
   {
