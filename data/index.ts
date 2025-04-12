@@ -65,6 +65,8 @@ export const gridItems = [
       " Accompagnement sur la mise en route & conformité",
       "  Commencez vos activités immédiatement",
     ],
+    delai: "",
+    presence: "",
     totalTime:
       "L’ensemble du processus prend environ 2 à 3 semaines. Votre présence à Dubaï est uniquement requise pour la biométrie liée au visa.",
     img: "/icons/5.png",
