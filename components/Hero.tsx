@@ -6,7 +6,7 @@ import TypingEffect from "./ui/TypingEffect";
 
 const Hero = () => {
   return (
-    <div className="pb-20 pt-3">
+    <div className="pb-20">
       {/**
        *  UI: Spotlights
        *  Link: https://ui.aceternity.com/components/spotlight

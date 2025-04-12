@@ -46,7 +46,7 @@ const TypingEffect = () => {
   }, [charIndex, deleting, wordIndex]);
 
   return (
-    <h1 className="font-bold text-center text-[43px] leading-[125%] md:text-6xl lg:leading-[130%]">
+    <h1 className="font-bold text-center text-[43px] leading-[125%] md:text-6xl lg:leading-[130%] h-[250px]">
       Votre société à Dubaï{" "}
       <span className="text-[#7b3bfbf5]">{displayText}</span>
       <span className="animate-blink">|</span> par les meilleurs du marché
