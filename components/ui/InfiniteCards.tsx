@@ -7,7 +7,7 @@ export const InfiniteMovingCards = ({
   items,
   direction = "left",
   speed = "fast",
-  pauseOnHover = true,
+  pauseOnHover = false,
   className,
 }: {
   items: {
@@ -110,22 +110,28 @@ export const InfiniteMovingCards = ({
                 aria-hidden="true"
                 className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
-              {/* change text color, text-lg */}
+
+              {/* ⭐ Add Stars Here */}
+              <div className="relative z-20 mb-4 flex gap-1 text-yellow-400 text-lg md:text-2xl">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i}>★</span>
+                ))}
+              </div>
+
+              {/* Quote text */}
               <div className="relative z-20 text-sm md:text-lg leading-[1.6] text-white font-normal space-y-4">
                 {item.quote.split("\n\n").map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))}
               </div>
 
+              {/* Author */}
               <div className="relative z-20 mt-6 flex flex-row items-center">
-                {/* add this div for the profile img */}
-
-                <span className="flex flex-col gap-1 text-sm md:text-md">
-                  {/* change text color, font-normal to font-bold, text-xl */}
+                <span className="flex items-center justify-center gap-1 text-sm md:text-md">
                   <span className="text-xl font-bold leading-[1.6] text-white">
                     {item.name}
                   </span>
-                  {item.job}
+                  <span>({item.job})</span>
                 </span>
               </div>
             </blockquote>

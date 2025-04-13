@@ -91,7 +91,7 @@ export const challenges = {
     "*Visa VIP en 1 à 2 jours ouvrés*, présence uniquement pour biométrie",
     "-Ouverture guidée:- compte perso, pro émirati et pro européen",
     "Enregistrement Corporate Tax *géré et inclus*",
-    "Interloctuteur *dédié, support premium*",
+    "Interlocuteur *dédié, support premium*",
     "Pack *100 % clé en main,* -zéro surprise-",
     "Numéro local + tampon officiel inclus",
     "*Option d’accompagnement* pour la famille",
