@@ -1,13 +1,13 @@
 import { DashboardLayout } from "@/components/admin/dashboard-layout";
-import AuthGuard from "@/components/auth/AuthGard";
+import EditProfile from "@/components/client/EditProfile";
 import React from "react";
 
 type Props = {};
 
-export default function Dashboard({}: Props) {
+export default function page({}: Props) {
   return (
     <DashboardLayout>
-      Bienvenue à ton dashboard chargé de compte
+      <EditProfile />
     </DashboardLayout>
   );
 }

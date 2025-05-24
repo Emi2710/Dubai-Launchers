@@ -1,4 +1,5 @@
 "use client";
+
 import { Bell, Signal, User } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SignOutButton from "../auth/SignOutButton";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   getLoggedInUserProfile,
   UserProfile,
 } from "@/lib/getLoggedInUserProfile";
-import Link from "next/link";
 
 export function DashboardHeader() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -53,7 +54,7 @@ export function DashboardHeader() {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              <Link href="/admin/profile">Profil</Link>
+              <Link href="/client/profile">Profile</Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

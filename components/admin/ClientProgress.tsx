@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle2, Clock, Loader, Loader2 } from "lucide-react";
+import { CheckCircle2, Clock, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const steps = [
   "Analyse et Préparation",
@@ -24,7 +25,9 @@ const steps = [
 const statusOptions = ["à venir", "en cours", "validé"];
 
 export default function ClientProgress({ clientId }: { clientId: string }) {
-  const [progress, setProgress] = useState<Record<string, string>>({});
+  const [progress, setProgress] = useState<
+    Record<string, { status: string; date: string | null }>
+  >({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,15 +35,18 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
       setLoading(true);
       const { data, error } = await supabase
         .from("business_progress")
-        .select("step, status")
+        .select("step, status, date")
         .eq("client_id", clientId);
 
       if (error) {
         console.error("Erreur récupération:", error.message);
+        setLoading(false);
         return;
       }
 
-      const formatted = Object.fromEntries(data.map((d) => [d.step, d.status]));
+      const formatted = Object.fromEntries(
+        data.map((d) => [d.step, { status: d.status, date: d.date }])
+      );
       setProgress(formatted);
       setLoading(false);
     };
@@ -49,29 +55,45 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
   }, [clientId]);
 
   const updateStatus = async (step: string, status: string) => {
+    const currentDate = progress[step]?.date ?? null;
+
     const { error } = await supabase
       .from("business_progress")
       .upsert(
-        { client_id: clientId, step, status },
+        { client_id: clientId, step, status, date: currentDate },
         { onConflict: "client_id,step" }
       );
 
     if (error) {
       alert("Erreur mise à jour: " + error.message);
     } else {
-      setProgress((prev) => ({ ...prev, [step]: status }));
+      setProgress((prev) => ({
+        ...prev,
+        [step]: { ...(prev[step] || {}), status },
+      }));
     }
   };
 
-  // Get status color class
-  const getStatusColorClass = (status: string) => {
-    switch (status) {
-      default:
-        return "";
+  const updateDate = async (step: string, date: string) => {
+    const currentStatus = progress[step]?.status ?? "à venir";
+
+    const { error } = await supabase
+      .from("business_progress")
+      .upsert(
+        { client_id: clientId, step, status: currentStatus, date },
+        { onConflict: "client_id,step" }
+      );
+
+    if (error) {
+      alert("Erreur mise à jour de la date: " + error.message);
+    } else {
+      setProgress((prev) => ({
+        ...prev,
+        [step]: { ...(prev[step] || {}), date },
+      }));
     }
   };
 
-  // Get status icon and color
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "validé":
@@ -83,7 +105,6 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
     }
   };
 
-  // Get status trigger color
   const getStatusTriggerClass = (status: string) => {
     switch (status) {
       case "validé":
@@ -103,14 +124,11 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
       <CardContent>
         <div className="space-y-4">
           {steps.map((step) => {
-            const currentStatus = progress[step] || "à venir";
-            const statusColorClass = getStatusColorClass(currentStatus);
+            const currentStatus = progress[step]?.status || "à venir";
+            const currentDate = progress[step]?.date || "";
 
             return (
-              <div
-                key={step}
-                className={cn("rounded-md border p-4", statusColorClass)}
-              >
+              <div key={step} className="rounded-md border p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium">{step}</h3>
                   <Select
@@ -137,6 +155,18 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Date :
+                  </label>
+                  <input
+                    type="date"
+                    value={currentDate ? currentDate : ""}
+                    onChange={(e) => updateDate(step, e.target.value)}
+                    className="border rounded px-2 py-1 text-sm"
+                  />
                 </div>
               </div>
             );

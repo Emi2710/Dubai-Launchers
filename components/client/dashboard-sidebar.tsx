@@ -1,7 +1,15 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarClock, FileText, Home, Users } from "lucide-react";
+import {
+  CalendarClock,
+  Contact2,
+  FileText,
+  Home,
+  HomeIcon,
+  Phone,
+  Users,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,9 +26,24 @@ export function DashboardSidebar() {
 
   const navItems = [
     {
-      title: "Utilisateurs",
-      href: "/admin/utilisateurs",
-      icon: Users,
+      title: "Accueil",
+      href: "/client/dashboard",
+      icon: HomeIcon,
+    },
+    {
+      title: "Mes documents et informations",
+      href: "/client/documents",
+      icon: FileText,
+    },
+    {
+      title: "Mes rendez-vous",
+      href: "/client/rendez-vous",
+      icon: CalendarClock,
+    },
+    {
+      title: "Nous contacter",
+      href: "/client/contact",
+      icon: Phone,
     },
   ];
 

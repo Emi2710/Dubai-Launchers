@@ -18,9 +18,14 @@ export function DashboardSidebar() {
 
   const navItems = [
     {
-      title: "Utilisateurs",
-      href: "/admin/utilisateurs",
-      icon: Users,
+      title: "Accueil",
+      href: "/manager/utilisateurs",
+      icon: Home,
+    },
+    {
+      title: "Documents",
+      href: "/manager/documents",
+      icon: FileText,
     },
   ];
 

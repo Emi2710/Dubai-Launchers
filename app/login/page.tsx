@@ -33,41 +33,53 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // Step 1: Login
+    const { data: signInData, error: signInError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError(error.message);
+    if (signInError || !signInData?.user) {
+      setError(signInError?.message || "Erreur de connexion.");
       setLoading(false);
       return;
     }
 
-    // Récupérer l'utilisateur connecté (avec les metadata)
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const user = signInData.user;
 
-    if (userError || !user) {
-      setError("Impossible de récupérer les informations utilisateur.");
+    // Step 2: Fetch profile to check "active"
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("active, role")
+      .eq("user_id", user.id)
+      .single();
+
+    if (profileError) {
+      setError("Erreur lors de la récupération du profil.");
       setLoading(false);
       return;
     }
 
-    // Récupérer le rôle dans les metadata
-    const role = user.user_metadata?.role;
+    if (!profile.active) {
+      await supabase.auth.signOut();
+      setError(
+        "Votre compte est désactivé. Veuillez contacter un administrateur."
+      );
+      setLoading(false);
+      return;
+    }
 
-    // Redirection selon le rôle
+    // Step 3: Redirect based on role
+    const role = profile.role;
+
     if (role === "admin") {
       router.push("/admin/utilisateurs");
     } else if (role === "client") {
       router.push("/client/dashboard");
     } else if (role === "charge_de_compte") {
-      router.push("/charge_de_compte/dashboard");
+      router.push("/manager/utilisateurs");
     } else {
-      // Redirection par défaut si rôle non défini
       router.push("/");
     }
 

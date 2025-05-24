@@ -192,16 +192,22 @@ export default function UsersTable() {
 
     switch (role.toLowerCase()) {
       case "admin":
-        return <Badge className="bg-red-500 hover:bg-red-600">Admin</Badge>;
+        return (
+          <Badge className="border-red-400 text-red-300 bg-black hover:bg-black">
+            Admin
+          </Badge>
+        );
       case "charge_de_compte":
         return (
-          <Badge className="bg-blue-500 hover:bg-blue-600">
+          <Badge className="border-blue-400 text-blue-300 bg-black hover:bg-black">
             Chargé de compte
           </Badge>
         );
       case "client":
         return (
-          <Badge className="bg-green-500 hover:bg-green-600">Client</Badge>
+          <Badge className="border-green-400 text-green-300 bg-black hover:bg-black">
+            Client
+          </Badge>
         );
       default:
         return <Badge variant="outline">{role}</Badge>;
@@ -212,11 +218,17 @@ export default function UsersTable() {
     if (active === null) return <Badge variant="outline">-</Badge>;
 
     return active ? (
-      <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+      <Badge
+        variant="default"
+        className="border-green-400 text-green-300 bg-black hover:bg-black"
+      >
         Actif
       </Badge>
     ) : (
-      <Badge variant="secondary" className="bg-gray-500 hover:bg-gray-600">
+      <Badge
+        variant="secondary"
+        className="border-gray-400 text-gray-300 bg-black hover:bg-black"
+      >
         Inactif
       </Badge>
     );
@@ -521,34 +533,11 @@ export default function UsersTable() {
                       <TableCell>{getRoleBadge(user.role)}</TableCell>
                       <TableCell>{getStatusBadge(user.active)}</TableCell>
                       <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              <Link
-                                href={`/admin/utilisateurs/${user.user_id}/update`}
-                              >
-                                Voir
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive focus:text-destructive">
-                              <UserX className="mr-2 h-4 w-4" />
-                              {user.active ? "Désactiver" : "Activer"}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Link
+                          href={`/admin/utilisateurs/${user.user_id}/update`}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))

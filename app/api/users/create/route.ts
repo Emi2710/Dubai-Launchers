@@ -1,11 +1,13 @@
-// app/api/users/create/route.ts (Next.js 13+ app router) ou pages/api/users/create.ts (pages router)
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // clé admin côté serveur uniquement
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: Request) {
   try {
@@ -20,10 +22,10 @@ export async function POST(req: Request) {
       assigned_to,
     } = form;
 
-    // 1. Création utilisateur avec user_metadata (incluant le rôle)
+    // 1. Create user
     const { data: user, error } = await supabase.auth.admin.createUser({
       email,
-      email_confirm: true, // si tu veux que l’email soit considéré comme confirmé
+      email_confirm: true,
       user_metadata: {
         first_name,
         last_name,
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
 
     const userId = user.user.id;
 
-    // 2. Insertion dans la table profiles
+    // 2. Insert profile
     const { error: profileError } = await supabase.from("profiles").insert({
       user_id: userId,
       first_name,
@@ -67,26 +69,24 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Envoi du lien de définition du mot de passe
-    const { error: linkError } = await supabase.auth.resetPasswordForEmail(
-      email,
-      {
-        redirectTo: "https://localhost:3000/login/reset-password", // mets ton URL ici
-      }
-    );
-
-    if (linkError) {
-      return NextResponse.json(
-        {
-          error:
-            "Utilisateur créé, mais échec de l’envoi du lien de définition de mot de passe : " +
-            linkError.message,
-        },
-        { status: 200 }
-      );
+    // 3. Send welcome email with Resend
+    try {
+      await resend.emails.send({
+        from: "onboarding@resend.dev", // change this to your verified sender email
+        to: "delivered@resend.dev",
+        subject: `${first_name}, bienvenue sur Dubai Launchers!`,
+        html: `
+          <h1>Bienvenue sur notre plateforme ${first_name}!</h1>
+          <p>Nous sommes ravis de vous compter parmi nous.</p>
+          <p>Pour accéder à votre espace, veuillez d'abord créer votre mot de passe en suivant ce lien : <a href="https://localhost3000/login/forgot-password" target="_blank">ici</a></p>
+        `,
+      });
+    } catch (emailError) {
+      // If email sending fails, log but don't break
+      console.error("Erreur envoi email:", emailError);
     }
 
-    // Succès
+    // Success
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json(

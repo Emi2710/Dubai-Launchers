@@ -176,16 +176,22 @@ export default function UserInfoEditor({ userId }: Props) {
   const getRoleBadge = (role: string) => {
     switch (role) {
       case "admin":
-        return <Badge className="bg-red-500 hover:bg-red-600">Admin</Badge>;
+        return (
+          <Badge className="border-red-400 text-red-300 bg-black hover:bg-black">
+            Admin
+          </Badge>
+        );
       case "charge_de_compte":
         return (
-          <Badge className="bg-blue-500 hover:bg-blue-600">
+          <Badge className="border-blue-400 text-blue-300 bg-black hover:bg-black">
             Chargé de compte
           </Badge>
         );
       case "client":
         return (
-          <Badge className="bg-green-500 hover:bg-green-600">Client</Badge>
+          <Badge className="border-green-400 text-green-300 bg-black hover:bg-black">
+            Client
+          </Badge>
         );
       default:
         return <Badge variant="outline">{role}</Badge>;
@@ -325,9 +331,9 @@ export default function UserInfoEditor({ userId }: Props) {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="pl-9"
               placeholder="email@exemple.com"
+              disabled
             />
           </div>
         </div>
