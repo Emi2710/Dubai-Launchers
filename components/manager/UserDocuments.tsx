@@ -16,6 +16,24 @@ type UserProfile = {
   idcard_path: string | null;
 };
 
+// Improved helper to get relative path inside bucket
+function extractRelativePath(fullPath: string): string {
+  if (!fullPath) return "";
+
+  try {
+    const url = new URL(fullPath);
+    const documentsIndex = url.pathname.indexOf("/documents/");
+    if (documentsIndex === -1) return fullPath;
+    return url.pathname.substring(documentsIndex + "/documents/".length);
+  } catch {
+    // If not a valid URL, check and remove 'documents/' prefix if present
+    if (fullPath.startsWith("documents/")) {
+      return fullPath.substring("documents/".length);
+    }
+    return fullPath;
+  }
+}
+
 export default function ViewUserProfile() {
   const params = useParams();
   const userId = params?.id;
@@ -33,16 +51,16 @@ export default function ViewUserProfile() {
       setLoading(true);
       setError(null);
 
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-      if (authError || !user) {
+      // Check user authentication
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
+      if (authError || !authData.user) {
         setError("You must be logged in to view profiles.");
         setLoading(false);
         return;
       }
 
+      // Fetch profile from DB
       const { data, error } = await supabase
         .from("users_profiles")
         .select("*")
@@ -57,17 +75,49 @@ export default function ViewUserProfile() {
 
       setProfile(data);
 
-      if (data.passport_path) {
-        const { data: passportSignedUrlData, error } = await supabase.storage
-          .from("documents")
-          .createSignedUrl(data.passport_path, 60);
-        if (!error) setPassportUrl(passportSignedUrlData.signedUrl);
+      // DEBUG: Log raw paths from DB
+      console.log("Raw passport_path from DB:", data.passport_path);
+      console.log("Raw idcard_path from DB:", data.idcard_path);
+
+      // List files in documents bucket for debugging
+      const { data: listData, error: listError } = await supabase.storage
+        .from("documents")
+        .list("", { limit: 100 });
+      if (listError) {
+        console.error("Error listing documents bucket files:", listError);
+      } else {
+        console.log("Documents bucket files:", listData);
       }
+
+      // Create signed URLs if paths exist
+      if (data.passport_path) {
+        const relativePath = extractRelativePath(data.passport_path);
+        console.log("Passport relative path:", relativePath);
+        const { data: passportSignedUrlData, error: passportError } =
+          await supabase.storage
+            .from("documents")
+            .createSignedUrl(relativePath, 600);
+
+        if (passportError) {
+          console.error("Error creating passport signed URL:", passportError);
+        } else {
+          setPassportUrl(passportSignedUrlData.signedUrl);
+        }
+      }
+
       if (data.idcard_path) {
-        const { data: idcardSignedUrlData, error } = await supabase.storage
-          .from("documents")
-          .createSignedUrl(data.idcard_path, 60);
-        if (!error) setIdcardUrl(idcardSignedUrlData.signedUrl);
+        const relativePath = extractRelativePath(data.idcard_path);
+        console.log("ID card relative path:", relativePath);
+        const { data: idcardSignedUrlData, error: idcardError } =
+          await supabase.storage
+            .from("documents")
+            .createSignedUrl(relativePath, 600);
+
+        if (idcardError) {
+          console.error("Error creating ID card signed URL:", idcardError);
+        } else {
+          setIdcardUrl(idcardSignedUrlData.signedUrl);
+        }
       }
 
       setLoading(false);
@@ -101,7 +151,7 @@ export default function ViewUserProfile() {
         <strong>Nationality:</strong> {profile.nationality}
       </p>
 
-      {passportUrl && (
+      {passportUrl ? (
         <p>
           <a
             href={passportUrl}
@@ -112,8 +162,11 @@ export default function ViewUserProfile() {
             Download Passport Document
           </a>
         </p>
+      ) : (
+        <p>No Passport Document Available</p>
       )}
-      {idcardUrl && (
+
+      {idcardUrl ? (
         <p>
           <a
             href={idcardUrl}
@@ -124,6 +177,8 @@ export default function ViewUserProfile() {
             Download ID Card Document
           </a>
         </p>
+      ) : (
+        <p>No ID Card Document Available</p>
       )}
     </div>
   );
