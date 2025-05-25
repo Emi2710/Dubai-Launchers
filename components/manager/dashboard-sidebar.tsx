@@ -22,11 +22,6 @@ export function DashboardSidebar() {
       href: "/manager/utilisateurs",
       icon: Home,
     },
-    {
-      title: "Documents",
-      href: "/manager/documents",
-      icon: FileText,
-    },
   ];
 
   return (
