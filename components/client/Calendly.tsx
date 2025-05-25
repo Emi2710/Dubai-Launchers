@@ -69,7 +69,7 @@ export default function Calendly({}: Props) {
   }, []);
   return (
     <div className="mt-16">
-      <div className="flex items-center">
+      <div className="flex items-center md:justify-center">
         <PhoneCall className="text-red-400" />
         <h2 className="ml-2 text-2xl md:text-3xl font-bold">
           Réserver un appel avec votre référent

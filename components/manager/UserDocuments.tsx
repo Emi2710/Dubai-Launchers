@@ -14,19 +14,18 @@ type UserProfile = {
   nationality: string;
   passport_path: string | null;
   idcard_path: string | null;
+  active: boolean;
+  comment: string | null;
 };
 
-// Improved helper to get relative path inside bucket
 function extractRelativePath(fullPath: string): string {
   if (!fullPath) return "";
-
   try {
     const url = new URL(fullPath);
     const documentsIndex = url.pathname.indexOf("/documents/");
     if (documentsIndex === -1) return fullPath;
     return url.pathname.substring(documentsIndex + "/documents/".length);
   } catch {
-    // If not a valid URL, check and remove 'documents/' prefix if present
     if (fullPath.startsWith("documents/")) {
       return fullPath.substring("documents/".length);
     }
@@ -43,6 +42,8 @@ export default function ViewUserProfile() {
   const [error, setError] = useState<string | null>(null);
   const [passportUrl, setPassportUrl] = useState<string | null>(null);
   const [idcardUrl, setIdcardUrl] = useState<string | null>(null);
+  const [refuseMode, setRefuseMode] = useState(false);
+  const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
     if (!userId) return;
@@ -51,7 +52,6 @@ export default function ViewUserProfile() {
       setLoading(true);
       setError(null);
 
-      // Check user authentication
       const { data: authData, error: authError } =
         await supabase.auth.getUser();
       if (authError || !authData.user) {
@@ -60,7 +60,6 @@ export default function ViewUserProfile() {
         return;
       }
 
-      // Fetch profile from DB
       const { data, error } = await supabase
         .from("users_profiles")
         .select("*")
@@ -75,49 +74,22 @@ export default function ViewUserProfile() {
 
       setProfile(data);
 
-      // DEBUG: Log raw paths from DB
-      console.log("Raw passport_path from DB:", data.passport_path);
-      console.log("Raw idcard_path from DB:", data.idcard_path);
-
-      // List files in documents bucket for debugging
-      const { data: listData, error: listError } = await supabase.storage
-        .from("documents")
-        .list("", { limit: 100 });
-      if (listError) {
-        console.error("Error listing documents bucket files:", listError);
-      } else {
-        console.log("Documents bucket files:", listData);
-      }
-
-      // Create signed URLs if paths exist
       if (data.passport_path) {
         const relativePath = extractRelativePath(data.passport_path);
-        console.log("Passport relative path:", relativePath);
         const { data: passportSignedUrlData, error: passportError } =
           await supabase.storage
             .from("documents")
             .createSignedUrl(relativePath, 600);
-
-        if (passportError) {
-          console.error("Error creating passport signed URL:", passportError);
-        } else {
-          setPassportUrl(passportSignedUrlData.signedUrl);
-        }
+        if (!passportError) setPassportUrl(passportSignedUrlData.signedUrl);
       }
 
       if (data.idcard_path) {
         const relativePath = extractRelativePath(data.idcard_path);
-        console.log("ID card relative path:", relativePath);
         const { data: idcardSignedUrlData, error: idcardError } =
           await supabase.storage
             .from("documents")
             .createSignedUrl(relativePath, 600);
-
-        if (idcardError) {
-          console.error("Error creating ID card signed URL:", idcardError);
-        } else {
-          setIdcardUrl(idcardSignedUrlData.signedUrl);
-        }
+        if (!idcardError) setIdcardUrl(idcardSignedUrlData.signedUrl);
       }
 
       setLoading(false);
@@ -179,6 +151,77 @@ export default function ViewUserProfile() {
         </p>
       ) : (
         <p>No ID Card Document Available</p>
+      )}
+
+      <hr style={{ margin: "20px 0" }} />
+      <h3>Validation des documents</h3>
+      <p>
+        <strong>Statut:</strong> {profile.active ? "❌ Refusé" : "✔️ Validé"}
+      </p>
+
+      <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+        <button
+          onClick={async () => {
+            const { error } = await supabase
+              .from("users_profiles")
+              .update({ active: false, comment: null })
+              .eq("user_id", userId);
+
+            if (!error)
+              setProfile({ ...profile, active: false, comment: null });
+          }}
+          disabled={!profile.active}
+        >
+          ✅ Valider
+        </button>
+
+        <button onClick={() => setRefuseMode(true)} disabled={profile.active}>
+          ❌ Refuser
+        </button>
+      </div>
+
+      {/* Affichage du commentaire s'il y a refus */}
+      {profile.active && profile.comment && (
+        <p>
+          <strong>Commentaire pour le client :</strong> {profile.comment}
+        </p>
+      )}
+
+      {/* Formulaire de refus */}
+      {refuseMode && (
+        <div>
+          <textarea
+            placeholder="Motif du refus à afficher au client"
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            rows={4}
+            style={{ width: "100%", marginBottom: 10 }}
+          />
+          <div style={{ display: "flex", gap: 10 }}>
+            <button
+              onClick={async () => {
+                const { error } = await supabase
+                  .from("users_profiles")
+                  .update({ active: true, comment: commentText })
+                  .eq("user_id", userId);
+
+                if (!error)
+                  setProfile({
+                    ...profile,
+                    active: true,
+                    comment: commentText,
+                  });
+
+                setRefuseMode(false);
+                setCommentText("");
+              }}
+            >
+              Sauvegarder le refus
+            </button>
+
+            <button onClick={() => setRefuseMode(false)}>Annuler</button>
+          </div>
+        </div>
       )}
     </div>
   );
