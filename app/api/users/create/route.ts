@@ -1,6 +1,11 @@
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -65,7 +70,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Send welcome email with Resend
-    /*try {
+    try {
       await resend.emails.send({
         from: "onboarding@resend.dev", // change this to your verified sender email
         to: "delivered@resend.dev",
@@ -79,7 +84,7 @@ export async function POST(req: Request) {
     } catch (emailError) {
       // If email sending fails, log but don't break
       console.error("Erreur envoi email:", emailError);
-    }*/
+    }
 
     // Success
     return NextResponse.json({ success: true });
