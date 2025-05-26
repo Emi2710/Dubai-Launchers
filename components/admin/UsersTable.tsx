@@ -392,16 +392,6 @@ export default function UsersTable() {
             />
           </div>
           <div className="flex items-center justify-between w-full md:w-auto">
-            <div className="md:hidden">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                Filtres
-              </Button>
-            </div>
             <div className="text-sm text-muted-foreground">
               {filteredUsers.length} utilisateur
               {filteredUsers.length !== 1 ? "s" : ""} trouvé
@@ -409,46 +399,6 @@ export default function UsersTable() {
             </div>
           </div>
         </div>
-
-        {showFilters && !isDesktop && (
-          <div className="mb-4 p-4 border rounded-md bg-muted/20">
-            <div className="text-sm font-medium mb-2">Trier par</div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="justify-between"
-                onClick={() => handleSort("first_name")}
-              >
-                Prénom {renderSortIcon("first_name")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="justify-between"
-                onClick={() => handleSort("last_name")}
-              >
-                Nom {renderSortIcon("last_name")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="justify-between"
-                onClick={() => handleSort("role")}
-              >
-                Rôle {renderSortIcon("role")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="justify-between"
-                onClick={() => handleSort("active")}
-              >
-                Statut {renderSortIcon("active")}
-              </Button>
-            </div>
-          </div>
-        )}
 
         {isDesktop ? (
           <div className="rounded-md border">
@@ -566,62 +516,39 @@ export default function UsersTable() {
             ) : (
               paginatedUsers.map((user) => (
                 <Card key={user.user_id} className="overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-medium">
-                            {user.first_name || ""} {user.last_name || ""}
-                          </h3>
-                          <p className="text-sm text-muted-foreground font-mono">
-                            {user.email || "-"}
-                          </p>
+                  <Link
+                    className="pb-3"
+                    href={`/admin/utilisateurs/${user.user_id}/update`}
+                  >
+                    <CardContent className="p-0">
+                      <div className="p-4">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-medium">
+                              {user.first_name || ""} {user.last_name || ""}
+                            </h3>
+                            <p className="text-sm text-muted-foreground font-mono">
+                              {user.email || ""}
+                            </p>
+                          </div>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              <Link
-                                href={`/admin/utilisateurs/${user.user_id}/update`}
-                              >
-                                Voir
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive focus:text-destructive">
-                              <UserX className="mr-2 h-4 w-4" />
-                              {user.active ? "Désactiver" : "Activer"}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground">
-                            Rôle:
-                          </span>
-                          {getRoleBadge(user.role)}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground">
-                            Statut:
-                          </span>
-                          {getStatusBadge(user.active)}
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">
+                              Rôle:
+                            </span>
+                            {getRoleBadge(user.role)}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">
+                              Statut:
+                            </span>
+                            {getStatusBadge(user.active)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
+                    </CardContent>{" "}
+                  </Link>
                 </Card>
               ))
             )}

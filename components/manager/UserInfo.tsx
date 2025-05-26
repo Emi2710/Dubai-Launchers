@@ -135,27 +135,27 @@ export default function UserInfo({ id }: Props) {
         <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-medium text-xl">
           {getInitials(user.first_name, user.last_name)}
         </div>
-        <h2 className="text-xl font-semibold text-slate-700">
+        <h2 className="text-xl font-semibold text-slate-300">
           {getFullName(user.first_name, user.last_name)}
         </h2>
       </div>
 
       {user.email && (
-        <div className="flex items-center gap-2 mb-2 text-slate-700">
+        <div className="flex items-center gap-2 mb-2 text-slate-300">
           <Mail className="h-5 w-5" />
           <span>{user.email}</span>
         </div>
       )}
 
       {user.phone && (
-        <div className="flex items-center gap-2 text-slate-700">
+        <div className="flex items-center gap-2 text-slate-300">
           <Phone className="h-5 w-5" />
           <span>{user.phone}</span>
         </div>
       )}
 
       <Link href={`/manager/documents/${user.user_id}`}>
-        <Button className="mt-3">Voir les documents soumis</Button>
+        <Button className="mt-3">Voir documents</Button>
       </Link>
 
       {docError && (

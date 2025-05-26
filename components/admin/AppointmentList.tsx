@@ -172,20 +172,20 @@ export default function AppointmentList({ clientId }: { clientId: string }) {
       case "confirmé":
         return (
           <Badge className="bg-green-300">
-            <CheckCircle className="mr-1 h-3 w-3" />
+            <CheckCircle className="mr-1 h-3 w-fit" />
             Confirmé
           </Badge>
         );
       case "à confirmer":
         return (
           <Badge className="bg-orange-300">
-            <AlertCircle className="mr-1 h-3 w-3" />À confirmer
+            <AlertCircle className="mr-1 h-3 w-fit" />À confirmer
           </Badge>
         );
       case "à venir":
         return (
           <Badge className="bg-blue-300">
-            <Clock3 className="mr-1 h-3 w-3" />À venir
+            <Clock3 className="mr-1 h-3 w-fit" />À venir
           </Badge>
         );
       default:
@@ -225,7 +225,7 @@ export default function AppointmentList({ clientId }: { clientId: string }) {
             }}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Nouveau rendez-vous
+            Nouveau
           </Button>
         </div>
       </CardHeader>
@@ -289,7 +289,8 @@ export default function AppointmentList({ clientId }: { clientId: string }) {
                               href={appt.action_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                              className="inline-flex items-center gap-1 text-white
+                              underline hover:text-blue-400 text-sm font-medium"
                             >
                               <ExternalLink className="h-3 w-3" />
                               {appt.action_text}
@@ -297,7 +298,7 @@ export default function AppointmentList({ clientId }: { clientId: string }) {
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col sm:items-end gap-3 w-full sm:w-auto">
+                      <div className="flex flex-col sm:items-end gap-3 w-[120px] sm:w-auto">
                         {getStatusBadge(appt.status)}
                         <div className="flex gap-2 w-full sm:w-auto">
                           <Button

@@ -266,7 +266,8 @@ export default function UpcomingActions({ clientId }: { clientId: string }) {
                       disabled={!!actionLoading}
                       className="h-9"
                     >
-                      <Pencil className="mr-1 h-4 w-4" /> Modifier
+                      <Pencil className="mr-1 h-4 w-4" />{" "}
+                      <p className="hidden lg:block">Modifier</p>
                     </Button>
                     <Button
                       size="sm"
@@ -280,7 +281,7 @@ export default function UpcomingActions({ clientId }: { clientId: string }) {
                       ) : (
                         <Trash2 className="mr-1 h-4 w-4" />
                       )}{" "}
-                      Supprimer
+                      <p className="hidden lg:block">Supprimer</p>
                     </Button>
                   </>
                 )}

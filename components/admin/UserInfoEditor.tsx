@@ -185,7 +185,7 @@ export default function UserInfoEditor({ userId }: Props) {
       case "charge_de_compte":
         return (
           <Badge className="border-blue-400 text-blue-300 bg-black hover:bg-black">
-            Chargé de compte
+            Manager
           </Badge>
         );
       case "client":
@@ -267,7 +267,7 @@ export default function UserInfoEditor({ userId }: Props) {
               Modifiez les informations de profil de l&apos;utilisateur
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col lg:flex-row items-center gap-2">
             {getRoleBadge(role)}
             <Badge variant={active ? "default" : "secondary"}>
               {active ? "Actif" : "Inactif"}
@@ -460,10 +460,14 @@ export default function UserInfoEditor({ userId }: Props) {
         )}
 
         <div className="flex items-center justify-between pt-4">
-          <Link href={`/admin/documents/${user.user_id}`}>
-            <Button className="">Voir les documents soumis</Button>
-          </Link>
-          <Button onClick={save} disabled={saving} className="min-w-32">
+          {user.role == "client" ? (
+            <Link href={`/admin/documents/${user.user_id}`}>
+              <Button className="">Voir documents</Button>
+            </Link>
+          ) : (
+            <div></div>
+          )}
+          <Button onClick={save} disabled={saving} className="w-fit">
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -471,7 +475,7 @@ export default function UserInfoEditor({ userId }: Props) {
               </>
             ) : (
               <>
-                <Save className="mr-2 h-4 w-4" />
+                <Save className=" h-4 w-fit" />
                 Sauvegarder
               </>
             )}
