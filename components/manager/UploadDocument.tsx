@@ -449,7 +449,7 @@ export default function UploadDocument() {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              Documents transmis
+              Documents que vous avez transmis
             </CardTitle>
             <Badge variant="outline">
               {files.length} fichier{files.length !== 1 ? "s" : ""}
