@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Send welcome email with Resend
-    try {
+    /*try {
       await resend.emails.send({
         from: "onboarding@resend.dev", // change this to your verified sender email
         to: "delivered@resend.dev",
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     } catch (emailError) {
       // If email sending fails, log but don't break
       console.error("Erreur envoi email:", emailError);
-    }
+    }*/
 
     // Success
     return NextResponse.json({ success: true });
