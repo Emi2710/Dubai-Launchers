@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { ThemeProvider } from "./provider";
+import AuthGuard from "@/components/auth/AuthGard";
 
 export const metadata: Metadata = {
   title: "Dubaï Launchers - Votre société à Dubaï en un temps record",
@@ -26,7 +27,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <AuthGuard>{children}</AuthGuard>
         </ThemeProvider>
       </body>
     </html>

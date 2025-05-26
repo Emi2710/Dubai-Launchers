@@ -1,8 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  User,
+  Calendar,
+  MapPin,
+  Flag,
+  FileText,
+  Download,
+  Check,
+  X,
+  AlertCircle,
+  Eye,
+  Shield,
+  Clock,
+} from "lucide-react";
 
 type UserProfile = {
   first_name: string;
@@ -16,6 +36,7 @@ type UserProfile = {
   idcard_path: string | null;
   active: boolean;
   comment: string | null;
+  updated_at: string;
 };
 
 function extractRelativePath(fullPath: string): string {
@@ -33,6 +54,14 @@ function extractRelativePath(fullPath: string): string {
   }
 }
 
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+};
+
 export default function ViewUserProfile() {
   const params = useParams();
   const userId = params?.id;
@@ -44,6 +73,7 @@ export default function ViewUserProfile() {
   const [idcardUrl, setIdcardUrl] = useState<string | null>(null);
   const [refuseMode, setRefuseMode] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -55,7 +85,7 @@ export default function ViewUserProfile() {
       const { data: authData, error: authError } =
         await supabase.auth.getUser();
       if (authError || !authData.user) {
-        setError("You must be logged in to view profiles.");
+        setError("Vous devez être connecté pour voir les profils.");
         setLoading(false);
         return;
       }
@@ -66,8 +96,16 @@ export default function ViewUserProfile() {
         .eq("user_id", userId)
         .single();
 
-      if (error || !data) {
-        setError("User profile not found or you do not have access.");
+      if (!data) {
+        setError(
+          "Profil utilisateur introuvable. Il semblerait que le client n'a pas encore remplit son formulaire."
+        );
+        setLoading(false);
+        return;
+      }
+
+      if (error) {
+        setError("Profil utilisateur introuvable ou accès non autorisé.");
         setLoading(false);
         return;
       }
@@ -98,131 +136,388 @@ export default function ViewUserProfile() {
     fetchProfile();
   }, [userId]);
 
-  if (loading) return <p>Loading profile...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!profile) return <p>No profile data.</p>;
+  const handleValidate = async () => {
+    setUpdating(true);
+    const { error } = await supabase
+      .from("users_profiles")
+      .update({ active: false, comment: null })
+      .eq("user_id", userId);
+
+    if (!error && profile) {
+      setProfile({ ...profile, active: false, comment: null });
+    }
+    setUpdating(false);
+  };
+
+  const handleReject = async () => {
+    setUpdating(true);
+    const { error } = await supabase
+      .from("users_profiles")
+      .update({ active: true, comment: commentText })
+      .eq("user_id", userId);
+
+    if (!error && profile) {
+      setProfile({ ...profile, active: true, comment: commentText });
+    }
+
+    setRefuseMode(false);
+    setCommentText("");
+    setUpdating(false);
+  };
+
+  function formatDateSubmit(dateString: string | null) {
+    if (!dateString) return "Date inconnue";
+
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex items-center space-x-3">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 sm:p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 sm:p-6">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Aucune donnée de profil disponible.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  const isValidated = !profile.active && !profile.comment;
+  const isRejected = profile.active && profile.comment;
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto" }}>
-      <h2>
-        {profile.first_name} {profile.last_name}&apos;s Profile
-      </h2>
-      <p>
-        <strong>Gender:</strong> {profile.gender}
-      </p>
-      <p>
-        <strong>Date of Birth:</strong> {profile.dob}
-      </p>
-      <p>
-        <strong>Place of Birth:</strong> {profile.place_of_birth}
-      </p>
-      <p>
-        <strong>Country of Birth:</strong> {profile.country_birth}
-      </p>
-      <p>
-        <strong>Nationality:</strong> {profile.nationality}
-      </p>
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+      {/* Header Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <User className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-xl sm:text-2xl">
+                  {profile.first_name} {profile.last_name}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Profil utilisateur
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Dernière soumission: {formatDateSubmit(profile.updated_at)}
+                </p>
+              </div>
+            </div>
+            <Badge
+              variant={
+                isValidated
+                  ? "default"
+                  : isRejected
+                    ? "destructive"
+                    : "secondary"
+              }
+              className="w-fit"
+            >
+              {isValidated ? (
+                <>
+                  <Check className="w-3 h-3 mr-1" />
+                  Validé
+                </>
+              ) : isRejected ? (
+                <>
+                  <X className="w-3 h-3 mr-1" />
+                  Refusé
+                </>
+              ) : (
+                <>
+                  <Clock className="w-3 h-3 mr-1" />
+                  En attente
+                </>
+              )}
+            </Badge>
+          </div>
+        </CardHeader>
+      </Card>
 
-      {passportUrl ? (
-        <p>
-          <a
-            href={passportUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-          >
-            Download Passport Document
-          </a>
-        </p>
-      ) : (
-        <p>No Passport Document Available</p>
-      )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Personal Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="w-5 h-5" />
+              Informations personnelles
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Genre
+                </p>
+                <p className="text-sm">{profile.gender}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Date de naissance
+                </p>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm">{formatDate(profile.dob)}</p>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Lieu de naissance
+                </p>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm">{profile.place_of_birth}</p>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Pays de naissance
+                </p>
+                <div className="flex items-center gap-2">
+                  <Flag className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm">{profile.country_birth}</p>
+                </div>
+              </div>
+              <div className="space-y-1 sm:col-span-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Nationalité
+                </p>
+                <div className="flex items-center gap-2">
+                  <Flag className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm">{profile.nationality}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-      {idcardUrl ? (
-        <p>
-          <a
-            href={idcardUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-          >
-            Download ID Card Document
-          </a>
-        </p>
-      ) : (
-        <p>No ID Card Document Available</p>
-      )}
+        {/* Documents */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Documents
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">Passeport</p>
+                    <p className="text-xs text-muted-foreground">
+                      {passportUrl ? "Document disponible" : "Aucun document"}
+                    </p>
+                  </div>
+                </div>
+                {passportUrl ? (
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <a
+                        href={passportUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        Voir
+                      </a>
+                    </Button>
+                  </div>
+                ) : (
+                  <Badge variant="secondary">Indisponible</Badge>
+                )}
+              </div>
 
-      <hr style={{ margin: "20px 0" }} />
-      <h3>Validation des documents</h3>
-      <p>
-        <strong>Statut:</strong> {profile.active ? "❌ Refusé" : "✔️ Validé"}
-      </p>
-
-      <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
-        <button
-          onClick={async () => {
-            const { error } = await supabase
-              .from("users_profiles")
-              .update({ active: false, comment: null })
-              .eq("user_id", userId);
-
-            if (!error)
-              setProfile({ ...profile, active: false, comment: null });
-          }}
-          disabled={!profile.active}
-        >
-          ✅ Valider
-        </button>
-
-        <button onClick={() => setRefuseMode(true)} disabled={profile.active}>
-          ❌ Refuser
-        </button>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">Carte d&apos;identité</p>
+                    <p className="text-xs text-muted-foreground">
+                      {idcardUrl ? "Document disponible" : "Aucun document"}
+                    </p>
+                  </div>
+                </div>
+                {idcardUrl ? (
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <a
+                        href={idcardUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        Voir
+                      </a>
+                    </Button>
+                  </div>
+                ) : (
+                  <Badge variant="secondary">Indisponible</Badge>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Affichage du commentaire s'il y a refus */}
-      {profile.active && profile.comment && (
-        <p>
-          <strong>Commentaire pour le client :</strong> {profile.comment}
-        </p>
-      )}
-
-      {/* Formulaire de refus */}
-      {refuseMode && (
-        <div>
-          <textarea
-            placeholder="Motif du refus à afficher au client"
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            rows={4}
-            style={{ width: "100%", marginBottom: 10 }}
-          />
-          <div style={{ display: "flex", gap: 10 }}>
-            <button
-              onClick={async () => {
-                const { error } = await supabase
-                  .from("users_profiles")
-                  .update({ active: true, comment: commentText })
-                  .eq("user_id", userId);
-
-                if (!error)
-                  setProfile({
-                    ...profile,
-                    active: true,
-                    comment: commentText,
-                  });
-
-                setRefuseMode(false);
-                setCommentText("");
-              }}
-            >
-              Sauvegarder le refus
-            </button>
-
-            <button onClick={() => setRefuseMode(false)}>Annuler</button>
+      {/* Validation Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            Validation des documents
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Current Status */}
+          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+            <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center">
+              {isValidated ? (
+                <Check className="w-4 h-4 text-green-600" />
+              ) : isRejected ? (
+                <X className="w-4 h-4 text-red-600" />
+              ) : (
+                <Clock className="w-4 h-4 text-orange-600" />
+              )}
+            </div>
+            <div>
+              <p className="font-medium">
+                {isValidated
+                  ? "Documents validés"
+                  : isRejected
+                    ? "Documents refusés"
+                    : "En attente de validation"}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {isValidated
+                  ? "Les documents ont été approuvés"
+                  : isRejected
+                    ? "Les documents nécessitent des corrections"
+                    : "Les documents sont en cours de révision"}
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+
+          {/* Rejection Comment */}
+          {profile.comment && (
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <strong>Commentaire pour le client :</strong> {profile.comment}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Action Buttons */}
+          {!refuseMode && (
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                onClick={handleValidate}
+                disabled={isValidated || updating}
+                className="flex-1"
+                variant={isValidated ? "outline" : "default"}
+              >
+                <Check className="w-4 h-4 mr-2" />
+                {updating ? "Validation..." : "Valider les documents"}
+              </Button>
+              <Button
+                onClick={() => setRefuseMode(true)}
+                variant="destructive"
+                className="flex-1"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Refuser les documents
+              </Button>
+            </div>
+          )}
+
+          {/* Rejection Form */}
+          {refuseMode && (
+            <div className="space-y-4 p-4 border rounded-lg bg-muted/20">
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Motif du refus à afficher au client
+                </label>
+                <Textarea
+                  placeholder="Expliquez pourquoi les documents sont refusés et ce que le client doit corriger..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  rows={4}
+                  className="resize-none"
+                />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  onClick={handleReject}
+                  disabled={!commentText.trim() || updating}
+                  variant="destructive"
+                  className="flex-1"
+                >
+                  {updating ? "Sauvegarde..." : "Confirmer le refus"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setRefuseMode(false);
+                    setCommentText("");
+                  }}
+                  variant="outline"
+                  className="flex-1"
+                  disabled={updating}
+                >
+                  Annuler
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

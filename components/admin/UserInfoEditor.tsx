@@ -37,6 +37,7 @@ import {
   Users,
   User,
 } from "lucide-react";
+import Link from "next/link";
 
 type UserType = {
   user_id: string;
@@ -458,7 +459,10 @@ export default function UserInfoEditor({ userId }: Props) {
           </div>
         )}
 
-        <div className="flex justify-end pt-4">
+        <div className="flex items-center justify-between pt-4">
+          <Link href={`/admin/documents/${user.user_id}`}>
+            <Button className="">Voir les documents soumis</Button>
+          </Link>
           <Button onClick={save} disabled={saving} className="min-w-32">
             {saving ? (
               <>

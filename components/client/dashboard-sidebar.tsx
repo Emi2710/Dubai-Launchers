@@ -48,16 +48,20 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex h-14 items-center border-b px-4">
+    <Sidebar className="bg-black/20">
+      <SidebarHeader className="flex h-14 items-center  px-4">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 font-semibold"
         >
-          <span className="text-xl font-bold">Dashboard</span>
+          <img
+            className="w-[120px] m-auto"
+            src="/logo/2.png"
+            alt="Logo Dubai Launchers"
+          />
         </Link>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-[70px]">
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>

@@ -87,9 +87,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 ">
-      <Card className="w-full max-w-md shadow-lg">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#000319]">
+      <Card className="w-full max-w-md shadow-lg bg-black/15">
         <CardHeader className="space-y-1">
+          <img
+            className="w-[140px] m-auto"
+            src="/logo/2.png"
+            alt="Logo Dubai Launchers"
+          />
           <CardTitle className="text-2xl font-bold text-center">
             Connexion
           </CardTitle>

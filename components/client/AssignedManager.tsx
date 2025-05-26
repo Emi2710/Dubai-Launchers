@@ -106,7 +106,7 @@ export default function AssignedManager({}: Props) {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <HandHeart className="h-5 w-5" />
+            <HandHeart className="h-5 w-5 text-violet-400" />
             Votre chargé de compte dédié
           </CardTitle>
         </CardHeader>
@@ -132,7 +132,7 @@ export default function AssignedManager({}: Props) {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <HandHeart className="h-5 w-5" />
+            <HandHeart className="h-5 w-5 text-violet-400" />
             Votre chargé de compte dédié
           </CardTitle>
         </CardHeader>
@@ -157,7 +157,7 @@ export default function AssignedManager({}: Props) {
     <Card className="mt-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <HandHeart className="h-5 w-5 text-blue-600" />
+          <HandHeart className="h-5 w-5 text-violet-400" />
           Votre chargé de compte dédié
         </CardTitle>
       </CardHeader>

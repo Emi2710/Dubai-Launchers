@@ -69,15 +69,15 @@ export default function UpcomingActions() {
     // Alternate between different icons for visual variety
     const icons = [CheckSquare, Clock, ArrowRight, Calendar];
     const IconComponent = icons[index % icons.length];
-    return <IconComponent className="w-4 h-4 text-blue-600" />;
+    return <IconComponent className="w-4 h-4 text-purple-600" />;
   };
 
   if (loading) {
     return (
-      <Card className="mt-6">
+      <Card className="mt-6 bg-black/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-blue-600" />
+            <Clock className="w-5 h-5 text-violet-400" />
             Prochaines étapes
           </CardTitle>
         </CardHeader>
@@ -107,7 +107,7 @@ export default function UpcomingActions() {
     <Card className="mt-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-blue-600" />
+          <Clock className="w-5 h-5 text-violet-400" />
           Prochaines étapes
           {actions.length > 0 && (
             <Badge variant="secondary" className="ml-auto">

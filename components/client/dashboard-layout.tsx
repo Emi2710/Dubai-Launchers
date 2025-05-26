@@ -12,16 +12,14 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <AuthGuard>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-muted/10">
-          <DashboardSidebar />
-          <div className="flex flex-1 flex-col">
-            <DashboardHeader />
-            <main className="flex-1 p-4 md:p-6">{children}</main>
-          </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-[#000319]">
+        <DashboardSidebar />
+        <div className="flex flex-1 flex-col">
+          <DashboardHeader />
+          <main className="flex-1 p-4 md:p-6">{children}</main>
         </div>
-      </SidebarProvider>
-    </AuthGuard>
+      </div>
+    </SidebarProvider>
   );
 }

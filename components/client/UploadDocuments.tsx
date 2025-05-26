@@ -35,7 +35,7 @@ import {
   Flag,
 } from "lucide-react";
 
-type Gender = "Male" | "Female";
+type Gender = "Homme" | "Femme";
 
 type FormData = {
   firstName: string;
@@ -53,7 +53,7 @@ export default function UserProfileForm() {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
-    gender: "Male",
+    gender: "Homme",
     dob: "",
     placeOfBirth: "",
     countryBirth: "",
@@ -291,7 +291,7 @@ export default function UserProfileForm() {
   );
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="max-w-2xl mx-a p-6 space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

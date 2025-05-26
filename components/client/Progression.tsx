@@ -201,7 +201,7 @@ export default function Progression() {
   }
 
   return (
-    <Card className="w-full mt-8">
+    <Card className="w-full mt-8 bg-black/20">
       <CardHeader>
         <CardTitle>Progression</CardTitle>
       </CardHeader>
@@ -211,7 +211,7 @@ export default function Progression() {
           <div className="rounded-md border">
             <Table>
               <TableHeader>
-                <TableRow className="bg-black">
+                <TableRow className="bg-black/30">
                   <TableHead className="font-semibold text-white">
                     Étape
                   </TableHead>
