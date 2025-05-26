@@ -10,7 +10,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Si on est sur login, on ne fait rien, on affiche direct
     if (pathname === "/login") {
       setLoading(false);
@@ -47,7 +47,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       }
       setLoading(false);
     }
-  }, [pathname, router, session]);
+  }, [pathname, router, session]);*/
 
   if (loading) return <div className="p-4">Chargement...</div>;
 
