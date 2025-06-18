@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  ArrowBigLeftIcon,
+  ArrowBigRightIcon,
   CalendarClock,
   Contact2,
   FileText,
@@ -44,6 +46,11 @@ export function DashboardSidebar() {
       title: "Nous contacter",
       href: "/client/contact",
       icon: Phone,
+    },
+    {
+      title: "Accéder à votre free-zone",
+      href: "/client/free-zone",
+      icon: ArrowBigRightIcon,
     },
   ];
 

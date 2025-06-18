@@ -8,6 +8,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { HandHeart, Mail, MessageCircle, UserX } from "lucide-react";
+import {
+  getLoggedInUserProfile,
+  UserProfile,
+} from "@/lib/getLoggedInUserProfile";
 
 type Props = {};
 
@@ -21,7 +25,20 @@ type Profile = {
 
 export default function AssignedManager({}: Props) {
   const [manager, setManager] = useState<Profile | null>(null);
+
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const result = await getLoggedInUserProfile();
+      setProfile(result);
+      setLoading(false);
+    };
+
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     const fetchManager = async () => {
@@ -94,9 +111,11 @@ export default function AssignedManager({}: Props) {
   const handleWhatsAppClick = () => {
     if (manager?.phone) {
       const formattedPhone = formatPhoneForWhatsApp(manager.phone);
+
       const message = encodeURIComponent(
-        "Bonjour, j'ai une question concernant ma création d'entreprise à Dubai."
+        `Bonjour, je suis ${profile?.first_name} ${profile?.last_name}. Je vous contacte depuis l’espace client Dubai Launchers. J’ai une question et je voulais échanger avec un membre de l’équipe.`
       );
+
       window.open(`https://wa.me/${formattedPhone}?text=${message}`, "_blank");
     }
   };

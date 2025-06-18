@@ -33,7 +33,9 @@ import {
   MapPin,
   Calendar,
   Flag,
+  Briefcase,
 } from "lucide-react";
+import { da } from "date-fns/locale";
 
 type Gender = "Homme" | "Femme";
 
@@ -47,6 +49,19 @@ type FormData = {
   nationality: string;
   passportFile: File | null;
   idcardFile: File | null;
+  activity: string;
+  trade_name1: string;
+  trade_name2: string;
+  trade_name3: string;
+  residenceAddress: string;
+  email: string;
+  mobileNumber: string;
+  lastDiploma: string;
+  dadName: string;
+  momName: string;
+  religion: string;
+  maritalStatus: string;
+  arrivalDateDubai: string;
 };
 
 export default function UserProfileForm() {
@@ -60,6 +75,19 @@ export default function UserProfileForm() {
     nationality: "",
     passportFile: null,
     idcardFile: null,
+    activity: "",
+    trade_name1: "",
+    trade_name2: "",
+    trade_name3: "",
+    residenceAddress: "",
+    email: "",
+    mobileNumber: "",
+    lastDiploma: "",
+    dadName: "",
+    momName: "",
+    religion: "",
+    maritalStatus: "",
+    arrivalDateDubai: "",
   });
 
   const [uploading, setUploading] = useState(false);
@@ -79,7 +107,7 @@ export default function UserProfileForm() {
       } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        setMessage("User not authenticated.");
+        setMessage("L'utilisateur n'est pas authentifié.");
         return;
       }
 
@@ -88,13 +116,13 @@ export default function UserProfileForm() {
       const { data, error } = await supabase
         .from("users_profiles")
         .select(
-          "first_name,last_name,gender,dob,place_of_birth,country_birth,nationality,active,comment"
+          "first_name,last_name,gender,dob,place_of_birth,country_birth,nationality,active,comment,activity,trade_name1, trade_name2,trade_name3, residence_address, email,mobile_number, last_diploma,dadName,momName,religion, marital_status,arrival_date_dubai"
         )
         .eq("user_id", user.id)
         .single();
 
       if (error) {
-        setMessage("Failed to load user profile.");
+        console.log("Failed to load user profile.", error);
       } else if (data) {
         setFormData((prev) => ({
           ...prev,
@@ -107,6 +135,19 @@ export default function UserProfileForm() {
           nationality: data.nationality || "",
           passportFile: null,
           idcardFile: null,
+          activity: data.activity || "",
+          trade_name1: data.trade_name1 || "",
+          trade_name2: data.trade_name2 || "",
+          trade_name3: data.trade_name3 || "",
+          residenceAddress: data.residence_address || "",
+          email: data.email || "",
+          mobileNumber: data.mobile_number || "",
+          lastDiploma: data.last_diploma || "",
+          dadName: data.dadName || "",
+          momName: data.momName || "",
+          religion: data.religion || "",
+          maritalStatus: data.marital_status || "",
+          arrivalDateDubai: data.arrival_date_dubai || "",
         }));
         setActive(data.active);
         setComment(data.comment);
@@ -170,7 +211,7 @@ export default function UserProfileForm() {
       } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        setMessage("User not authenticated.");
+        setMessage("L'utilisateur n'est pas authentifié.");
         setUploading(false);
         return;
       }
@@ -188,28 +229,41 @@ export default function UserProfileForm() {
 
       const { error: upsertError } = await supabase
         .from("users_profiles")
-        .upsert(
-          {
-            user_id: user.id,
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            gender: formData.gender,
-            dob: formData.dob,
-            place_of_birth: formData.placeOfBirth,
-            country_birth: formData.countryBirth,
-            nationality: formData.nationality,
-            ...(passport_path && { passport_path }),
-            ...(idcard_path && { idcard_path }),
-            updated_at: new Date().toISOString(),
-            active: false, // ❗ set to false to trigger admin re-validation
-          },
-          { onConflict: "user_id" }
-        );
+        .upsert({
+          user_id: user.id,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          gender: formData.gender,
+          dob: formData.dob,
+          place_of_birth: formData.placeOfBirth,
+          country_birth: formData.countryBirth,
+          nationality: formData.nationality,
+          ...(passport_path && { passport_path }),
+          ...(idcard_path && { idcard_path }),
+          updated_at: new Date().toISOString(),
+          active: false,
+          activity: formData.activity,
+          trade_name1: formData.trade_name1,
+          trade_name2: formData.trade_name2,
+          trade_name3: formData.trade_name3,
+          residence_address: formData.residenceAddress,
+          email: formData.email,
+          mobile_number: formData.mobileNumber,
+          last_diploma: formData.lastDiploma,
+          dadName: formData.dadName,
+          momName: formData.momName,
+          religion: formData.religion,
+          marital_status: formData.maritalStatus,
+          arrival_date_dubai: formData.arrivalDateDubai,
+        });
 
       if (upsertError) {
-        setMessage(`Failed to save profile: ${upsertError.message}`);
+        setMessage(
+          "Il semble y avoir eu une erreur. Veuillez remplir tout les champs"
+        );
+        /*console.log(`Failed to save profile: ${upsertError.message}`);*/
       } else {
-        setMessage("Profile saved successfully!");
+        setMessage("Votre profil a été sauvegardé avec succès");
         setActive(false); // also update local state
         setFormData((prev) => ({
           ...prev,
@@ -218,14 +272,15 @@ export default function UserProfileForm() {
         }));
       }
     } catch (error) {
-      setMessage("Unexpected error occurred.");
+      setMessage("Il semble y avoir eu une erreur");
+      console.log(error);
     }
 
     setUploading(false);
   }
 
   // Désactiver le formulaire si active est false
-  const isDisabled = active !== true;
+  const isDisabled = active === false;
 
   const getStatusBadge = () => {
     if (active === null) {
@@ -278,17 +333,35 @@ export default function UserProfileForm() {
           accept=".pdf,.doc,.docx,.txt"
           onChange={handleFileChange}
           disabled={disabled}
-          className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+          className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 min-h-[50px]"
         />
         {file && (
           <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
             <FileText className="w-4 h-4" />
             <span className="truncate">{file.name}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => removeFile(name as "passportFile" | "idcardFile")}
+              className="text-gray-500 hover:text-red-700"
+            >
+              ✕
+            </Button>
           </div>
         )}
       </div>
     </div>
   );
+
+  const removeFile = (
+    name: keyof Pick<FormData, "passportFile" | "idcardFile">
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: null,
+    }));
+  };
 
   return (
     <div className="max-w-2xl mx-a p-6 space-y-6">
@@ -325,6 +398,78 @@ export default function UserProfileForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-lg font-semibold">
+                <Briefcase className="w-5 h-5" />
+                Informations de l&apos;entreprise
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="activity">Activité principale *</Label>
+                <Select
+                  value={formData.activity}
+                  onValueChange={(value) =>
+                    handleSelectChange("activity", value)
+                  }
+                  disabled={isDisabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez une activité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="consulting">Consulting</SelectItem>
+                    <SelectItem value="commerce">Commerce</SelectItem>
+                    <SelectItem value="import_export">
+                      Import / Export
+                    </SelectItem>
+                    <SelectItem value="it_services">Services IT</SelectItem>
+                    <SelectItem value="other">Autre</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="trade_name1">Nom commercial 1 *</Label>
+                  <Input
+                    id="trade_name1"
+                    name="trade_name1"
+                    value={formData.trade_name1}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Premier choix"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="trade_name2">Nom commercial 2*</Label>
+                  <Input
+                    id="trade_name2"
+                    name="trade_name2"
+                    value={formData.trade_name2}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Deuxième choix"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="trade_name3">Nom commercial 3*</Label>
+                  <Input
+                    id="trade_name3"
+                    name="trade_name3"
+                    value={formData.trade_name3}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Troisième choix"
+                  />
+                </div>
+              </div>
+              <p className="text-xs opacity-80 py-3">
+                *Remplissez en fonction de votre ordre de préférence
+              </p>
+            </div>
             {/* Personal Information Section */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-lg font-semibold">
@@ -379,7 +524,7 @@ export default function UserProfileForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="dob" className="flex items-center gap-1">
+                  <Label htmlFor="dob" className="flex items-center gap-1 mt-2">
                     <Calendar className="w-4 h-4" />
                     Date de naissance *
                   </Label>
@@ -388,6 +533,136 @@ export default function UserProfileForm() {
                     name="dob"
                     type="date"
                     value={formData.dob}
+                    onChange={handleInputChange}
+                    required
+                    disabled={isDisabled}
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="residenceAddress">
+                    Adresse postale (pays de résidence)*
+                  </Label>
+                  <Input
+                    id="residenceAddress"
+                    name="residenceAddress"
+                    value={formData.residenceAddress}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Adresse complète"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Adresse email*</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="votre@email.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mobileNumber">Numéro de téléphone*</Label>
+                  <Input
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    type="tel"
+                    value={formData.mobileNumber}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="+971..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastDiploma">Dernier diplôme obtenu*</Label>
+                  <Input
+                    id="lastDiploma"
+                    name="lastDiploma"
+                    value={formData.lastDiploma}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Ex. Licence, Master..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dadName">Nom du père*</Label>
+                  <Input
+                    id="dadName"
+                    name="dadName"
+                    value={formData.dadName}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Nom du père"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="momName">Nom de la mère*</Label>
+                  <Input
+                    id="momName"
+                    name="momName"
+                    value={formData.momName}
+                    onChange={handleInputChange}
+                    disabled={isDisabled}
+                    required
+                    placeholder="Nom de la mère"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="religion">Religion*</Label>
+                  <Input
+                    id="religion"
+                    name="religion"
+                    value={formData.religion}
+                    onChange={handleInputChange}
+                    required
+                    disabled={isDisabled}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="maritalStatus">Statut marital*</Label>
+                  <Select
+                    value={formData.maritalStatus}
+                    onValueChange={(value) =>
+                      handleSelectChange("maritalStatus", value)
+                    }
+                    required
+                    disabled={isDisabled}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un statut" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="célibataire">Célibataire</SelectItem>
+                      <SelectItem value="marié(e)">Marié(e)</SelectItem>
+                      <SelectItem value="divorcé(e)">Divorcé(e)</SelectItem>
+                      <SelectItem value="veuf(ve)">Veuf(ve)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="arrivalDateDubai">
+                    Date approximative d&apos;arrivée à Dubai*
+                  </Label>
+                  <Input
+                    id="arrivalDateDubai"
+                    name="arrivalDateDubai"
+                    type="date"
+                    value={formData.arrivalDateDubai}
                     onChange={handleInputChange}
                     required
                     disabled={isDisabled}
@@ -510,12 +785,12 @@ export default function UserProfileForm() {
             {message && (
               <Alert
                 className={
-                  message.includes("successfully")
+                  message.includes("succès")
                     ? "border-green-500 text-green-700"
                     : "border-destructive text-destructive"
                 }
               >
-                {message.includes("successfully") ? (
+                {message.includes("succès") ? (
                   <CheckCircle className="h-4 w-4" />
                 ) : (
                   <AlertTriangle className="h-4 w-4" />
