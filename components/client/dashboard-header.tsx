@@ -54,7 +54,7 @@ export function DashboardHeader() {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              <Link href="/client/profile">Profile</Link>
+              <Link href="/client/profile">Profil</Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

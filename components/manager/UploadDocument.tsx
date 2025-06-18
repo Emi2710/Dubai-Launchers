@@ -50,6 +50,14 @@ const ACCEPTED_FILE_TYPES = {
   "application/pdf": { icon: FileText, color: "text-red-500", label: "PDF" },
 };
 
+const DOCUMENT_TYPES = [
+  { key: "license", label: "License" },
+  { key: "lease_agreement", label: "Lease Agreement" },
+  { key: "formation_certificate", label: "Formation Certificate" },
+  { key: "shares_certificate", label: "Shares Certificate" },
+  { key: "moa", label: "MOA" },
+];
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const getFileIcon = (fileName: string, mimeType?: string) => {
@@ -93,6 +101,7 @@ const formatDate = (dateString?: string) => {
 };
 
 export default function UploadDocument() {
+  const [selectedType, setSelectedType] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -110,29 +119,22 @@ export default function UploadDocument() {
   const clientId = params?.id;
 
   const validateFile = (file: File): string | null => {
-    if (file.size > MAX_FILE_SIZE) {
-      return `Le fichier est trop volumineux. Taille maximale: ${formatFileSize(MAX_FILE_SIZE)}`;
-    }
-
-    if (!Object.keys(ACCEPTED_FILE_TYPES).includes(file.type)) {
-      return "Type de fichier non supporté. Formats acceptés: PDF";
-    }
-
+    if (file.size > 10 * 1024 * 1024) return "Taille maximale : 10MB.";
+    if (!file.type.includes("pdf"))
+      return "Seuls les fichiers PDF sont acceptés.";
     return null;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
-    setFile(selectedFile);
-    setMessage("");
-    setFileError("");
-
-    if (selectedFile) {
-      const error = validateFile(selectedFile);
-      if (error) {
-        setFileError(error);
-        setFile(null);
-      }
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+    const error = validateFile(selected);
+    if (error) {
+      setFileError(error);
+      setFile(null);
+    } else {
+      setFile(selected);
+      setFileError("");
     }
   };
 
@@ -167,58 +169,32 @@ export default function UploadDocument() {
   }, []);
 
   const handleUpload = async () => {
-    if (!file || !clientId) {
-      setMessage("Veuillez sélectionner un fichier.");
+    if (!clientId || !file || !selectedType) {
+      setMessage("Veuillez sélectionner un type et un fichier PDF.");
       setMessageType("error");
       return;
     }
 
     setUploading(true);
     setUploadProgress(0);
+    const filePath = `clients/${clientId}/${selectedType}.pdf`;
 
     try {
-      const fileExt = file.name.split(".").pop();
-      const timestamp = Date.now();
-      const filePath = `clients/${clientId}/${timestamp}.${fileExt}`;
-
-      // Simulate upload progress
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
+      await supabase.storage.from("documents").remove([filePath]); // Supprimer l'ancien si existant
       const { error } = await supabase.storage
         .from("documents")
         .upload(filePath, file);
 
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      setMessage("Fichier téléchargé avec succès !");
+      if (error) throw error;
+      setMessage("Document téléchargé avec succès !");
       setMessageType("success");
       setFile(null);
-      await fetchFiles();
-
-      // Reset file input
-      const fileInput = document.getElementById("file") as HTMLInputElement;
-      if (fileInput) fileInput.value = "";
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Échec du téléchargement."
-      );
+      setSelectedType("");
+    } catch (err) {
+      setMessage("Erreur lors du téléchargement.");
       setMessageType("error");
     } finally {
       setUploading(false);
-      setTimeout(() => setUploadProgress(0), 1000);
     }
   };
 
@@ -305,129 +281,50 @@ export default function UploadDocument() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Upload className="w-5 h-5" />
-            Télécharger un document
+            <Upload className="w-5 h-5" /> Téléverser un document spécifique
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Drag and Drop Area */}
-          <div
-            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              dragActive
-                ? "border-primary bg-primary/5"
-                : file
-                  ? "border-green-300 bg-black"
-                  : "border-muted-foreground/25 hover:border-muted-foreground/50"
-            }`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-          >
-            <div className="space-y-4">
-              {file ? (
-                <div className="flex items-center justify-center gap-3">
-                  {getFileIcon(file.name, file.type)}
-                  <div className="text-left">
-                    <p className="font-medium">{file.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatFileSize(file.size)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setFile(null);
-                      setFileError("");
-                      const fileInput = document.getElementById(
-                        "file"
-                      ) as HTMLInputElement;
-                      if (fileInput) fileInput.value = "";
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="w-16 h-16 mx-auto bg-black rounded-full flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-muted-foreground bg-black" />
-                  </div>
-                  <div>
-                    <p className="text-lg font-medium">
-                      Glissez-déposez votre fichier ici
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      ou cliquez pour sélectionner
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <Input
-              id="file"
-              type="file"
-              accept={Object.keys(ACCEPTED_FILE_TYPES).join(",")}
-              onChange={handleFileChange}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
+          <div>
+            <label className="block text-sm font-medium">
+              Type de document
+            </label>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="mt-1 block w-full border rounded-md p-2 bg-black mt-2"
+            >
+              <option className="" value="">
+                -- Choisir un document --
+              </option>
+              {DOCUMENT_TYPES.map((doc) => (
+                <option key={doc.key} value={doc.key}>
+                  {doc.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* File Error */}
-          {fileError && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{fileError}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Accepted Formats */}
-          <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-muted-foreground">
-              Formats acceptés:
-            </span>
-            {Object.entries(ACCEPTED_FILE_TYPES).map(
-              ([type, { label, color }]) => (
-                <Badge key={type} variant="outline" className="text-xs">
-                  {label}
-                </Badge>
-              )
+          <div>
+            <Input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+            />
+            {fileError && (
+              <p className="text-sm text-red-500 mt-1">{fileError}</p>
             )}
           </div>
 
-          {/* Upload Progress */}
-          {uploading && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Téléchargement en cours...</span>
-                <span>{uploadProgress}%</span>
-              </div>
-              <Progress value={uploadProgress} className="w-full" />
-            </div>
-          )}
+          {uploading && <Progress value={uploadProgress} />}
 
-          {/* Upload Button */}
           <Button
             onClick={handleUpload}
-            disabled={uploading || !file || !!fileError}
-            className="w-full"
+            disabled={uploading || !file || !selectedType}
           >
-            {uploading ? (
-              <>
-                <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Téléchargement...
-              </>
-            ) : (
-              <>
-                <Upload className="w-4 h-4 mr-2" />
-                Télécharger le fichier
-              </>
-            )}
+            {uploading ? "Téléchargement..." : "Téléverser"}
           </Button>
 
-          {/* Message */}
           {message && (
             <Alert
               variant={messageType === "error" ? "destructive" : "default"}

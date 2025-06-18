@@ -22,6 +22,7 @@ import {
   Eye,
   Shield,
   Clock,
+  Briefcase,
 } from "lucide-react";
 
 type UserProfile = {
@@ -34,6 +35,19 @@ type UserProfile = {
   nationality: string;
   passport_path: string | null;
   idcard_path: string | null;
+  residence_address: string;
+  email: string;
+  mobile_number: string;
+  last_diploma: string;
+  dadName: string;
+  momName: string;
+  religion: string;
+  marital_status: string;
+  arrival_date_dubai: string;
+  activity: string;
+  trade_name1: string;
+  trade_name2: string;
+  trade_name3: string;
   active: boolean;
   comment: string | null;
   updated_at: string;
@@ -285,12 +299,54 @@ export default function ViewUserProfile() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
+              <Briefcase className="w-5 h-5" />
+              Informations professionnelles
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Activité principale
+              </p>
+              <p className="text-sm">{profile.activity}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Nom commercial 1
+              </p>
+              <p className="text-sm">{profile.trade_name1}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Nom commercial 2
+              </p>
+              <p className="text-sm">{profile.trade_name2}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Nom commercial 3
+              </p>
+              <p className="text-sm">{profile.trade_name3}</p>
+            </div>
+          </CardContent>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <User className="w-5 h-5" />
               Informations personnelles
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Prénom
+                </p>
+                <p className="text-sm">{profile.first_name}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">Nom</p>
+                <p className="text-sm">{profile.last_name}</p>
+              </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">
                   Genre
@@ -303,7 +359,7 @@ export default function ViewUserProfile() {
                 </p>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-sm">{formatDate(profile.dob)}</p>
+                  <p className="text-sm">{profile.dob}</p>
                 </div>
               </div>
               <div className="space-y-1">
@@ -332,6 +388,60 @@ export default function ViewUserProfile() {
                   <Flag className="w-4 h-4 text-muted-foreground" />
                   <p className="text-sm">{profile.nationality}</p>
                 </div>
+              </div>
+              <div className="space-y-1 sm:col-span-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Adresse de résidence
+                </p>
+                <p className="text-sm">{profile.residence_address}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Email
+                </p>
+                <p className="text-sm">{profile.email}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Téléphone
+                </p>
+                <p className="text-sm">{profile.mobile_number}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Dernier diplôme
+                </p>
+                <p className="text-sm">{profile.last_diploma}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Nom du père
+                </p>
+                <p className="text-sm">{profile.dadName}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Nom de la mère
+                </p>
+                <p className="text-sm">{profile.momName}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Religion
+                </p>
+                <p className="text-sm">{profile.religion}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Statut marital
+                </p>
+                <p className="text-sm">{profile.marital_status}</p>
+              </div>
+              <div className="space-y-1 sm:col-span-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Date d&apos;arrivée prévue à Dubaï
+                </p>
+                <p className="text-sm">{profile.arrival_date_dubai}</p>
               </div>
             </div>
           </CardContent>
