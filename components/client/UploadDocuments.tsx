@@ -96,6 +96,9 @@ export default function UserProfileForm() {
   const [comment, setComment] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
+  const [passportUrl, setPassportUrl] = useState<string | null>(null);
+  const [idcardUrl, setIdcardUrl] = useState<string | null>(null);
+
   const BUCKET_NAME = "documents";
 
   // Load user profile on mount
@@ -116,7 +119,7 @@ export default function UserProfileForm() {
       const { data, error } = await supabase
         .from("users_profiles")
         .select(
-          "first_name,last_name,gender,dob,place_of_birth,country_birth,nationality,active,comment,activity,trade_name1, trade_name2,trade_name3, residence_address, email,mobile_number, last_diploma,dadName,momName,religion, marital_status,arrival_date_dubai"
+          "first_name,last_name,gender,dob,place_of_birth, passport_path, idcard_path, country_birth,nationality,active,comment,activity,trade_name1, trade_name2,trade_name3, residence_address, email,mobile_number, last_diploma,dadName,momName,religion, marital_status,arrival_date_dubai"
         )
         .eq("user_id", user.id)
         .single();
@@ -149,8 +152,24 @@ export default function UserProfileForm() {
           maritalStatus: data.marital_status || "",
           arrivalDateDubai: data.arrival_date_dubai || "",
         }));
+        setPassportUrl(data.passport_path);
+        setIdcardUrl(data.idcard_path);
         setActive(data.active);
         setComment(data.comment);
+      }
+
+      if (data?.passport_path) {
+        const { data: passportData } = await supabase.storage
+          .from(BUCKET_NAME)
+          .getPublicUrl(data.passport_path);
+        setPassportUrl(passportData?.publicUrl || null);
+      }
+
+      if (data?.idcard_path) {
+        const { data: idcardData } = await supabase.storage
+          .from(BUCKET_NAME)
+          .getPublicUrl(data.idcard_path);
+        setIdcardUrl(idcardData?.publicUrl || null);
       }
     }
 
@@ -219,11 +238,15 @@ export default function UserProfileForm() {
       let passport_path = null;
       let idcard_path = null;
 
-      if (formData.passportFile) {
+      if (formData.passportFile && passportUrl) {
+        const oldPath = passportUrl.split(`${BUCKET_NAME}/`)[1]; // extrait le path
+        await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
         passport_path = await uploadFile(user.id, formData.passportFile);
       }
 
-      if (formData.idcardFile) {
+      if (formData.idcardFile && idcardUrl) {
+        const oldPath = idcardUrl.split(`${BUCKET_NAME}/`)[1];
+        await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
         idcard_path = await uploadFile(user.id, formData.idcardFile);
       }
 
@@ -314,11 +337,13 @@ export default function UserProfileForm() {
     name,
     label,
     file,
+    fileUrl,
     disabled,
   }: {
     name: string;
     label: string;
     file: File | null;
+    fileUrl?: string | null;
     disabled: boolean;
   }) => (
     <div className="space-y-2">
@@ -348,6 +373,19 @@ export default function UserProfileForm() {
             >
               ✕
             </Button>
+
+            {!file && fileUrl && (
+              <div className="mt-2 text-sm text-muted-foreground">
+                <a
+                  href={fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-blue-600 hover:text-blue-800"
+                >
+                  Voir le fichier existant
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -373,7 +411,7 @@ export default function UserProfileForm() {
                 <User className="w-5 h-5" />
                 Profil Utilisateur
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="pt-3">
                 Gérez vos informations personnelles et documents d&apos;identité
               </CardDescription>
             </div>
@@ -745,6 +783,7 @@ export default function UserProfileForm() {
                   name="passportFile"
                   label="Passeport"
                   file={formData.passportFile}
+                  fileUrl={passportUrl}
                   disabled={isDisabled}
                 />
 
@@ -752,6 +791,7 @@ export default function UserProfileForm() {
                   name="idcardFile"
                   label="Carte d'identité"
                   file={formData.idcardFile}
+                  fileUrl={idcardUrl}
                   disabled={isDisabled}
                 />
               </div>

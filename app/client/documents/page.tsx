@@ -28,7 +28,7 @@ export default function Documents({}: Props) {
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 Gestion des documents
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground pt-3">
                 Téléchargez vos documents requis et accédez à vos fichiers
                 disponibles
               </p>
@@ -43,7 +43,7 @@ export default function Documents({}: Props) {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-5">
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -102,9 +102,9 @@ export default function Documents({}: Props) {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-[40px]">
                 <Download className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-semibold">Mes documents</h2>
+                <h2 className="text-xl font-semibold ">Mes documents</h2>
               </div>
               <DownloadDocuments />
             </div>
