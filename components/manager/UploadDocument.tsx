@@ -116,13 +116,30 @@ export default function UploadDocument() {
   const [fileError, setFileError] = useState("");
 
   const params = useParams();
-  const clientId = params?.id;
+
+  const rawId = params?.id;
+  const clientId = Array.isArray(rawId) ? rawId[0] : rawId;
 
   const validateFile = (file: File): string | null => {
     if (file.size > 10 * 1024 * 1024) return "Taille maximale : 10MB.";
     if (!file.type.includes("pdf"))
       return "Seuls les fichiers PDF sont acceptés.";
     return null;
+  };
+
+  const getClientEmail = async (clientId: string): Promise<string | null> => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("email")
+      .eq("user_id", clientId)
+      .single();
+
+    if (error || !data) {
+      console.error("Erreur récupération email:", error);
+      return null;
+    }
+
+    return data.email;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,6 +204,21 @@ export default function UploadDocument() {
 
       if (error) throw error;
       setMessage("Document téléchargé avec succès !");
+
+      const email = await getClientEmail(clientId);
+      if (email) {
+        await fetch("/api/users/document-submission", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            type:
+              DOCUMENT_TYPES.find((d) => d.key === selectedType)?.label ||
+              selectedType,
+          }),
+        });
+      }
+
       setMessageType("success");
       setFile(null);
       setSelectedType("");

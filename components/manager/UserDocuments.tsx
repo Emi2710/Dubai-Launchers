@@ -152,6 +152,7 @@ export default function ViewUserProfile() {
 
   const handleValidate = async () => {
     setUpdating(true);
+
     const { error } = await supabase
       .from("users_profiles")
       .update({ active: false, comment: null })
@@ -159,7 +160,18 @@ export default function ViewUserProfile() {
 
     if (!error && profile) {
       setProfile({ ...profile, active: false, comment: null });
+
+      const email = profile.email;
+
+      await fetch("/api/users/validation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+        }),
+      });
     }
+
     setUpdating(false);
   };
 
@@ -172,6 +184,16 @@ export default function ViewUserProfile() {
 
     if (!error && profile) {
       setProfile({ ...profile, active: true, comment: commentText });
+
+      const email = profile.email;
+
+      await fetch("/api/users/refuse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+        }),
+      });
     }
 
     setRefuseMode(false);
