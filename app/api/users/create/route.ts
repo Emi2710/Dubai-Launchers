@@ -1,5 +1,6 @@
 import { generateWelcomeEmail } from "@/emails/WelcomeEmail";
 import { createClient } from "@supabase/supabase-js";
+import { request } from "http";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
           type: "recovery",
           email,
           options: {
-            redirectTo: "http://localhost:3000/login/reset-password", // change to your domain
+            redirectTo: `${process.env.NEXT_PUBLIC_URL}/login/reset-password`, // change to your domain
           },
         });
 

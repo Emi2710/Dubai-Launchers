@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         html: `
           <h1>Bienvenue sur notre plateforme</h1>
           <p>Nous sommes ravis de vous compter parmi nous.</p>
-          <p>Pour accéder à votre espace, veuillez d'abord créer votre mot de passe en suivant ce lien : <a href="https://localhost3000/login/forgot-password" target="_blank">ici</a></p>
+          <p>Pour accéder à votre espace, veuillez d'abord créer votre mot de passe en suivant ce lien : <a href="${process.env.NEXT_PUBLIC_URL}/login/forgot-password" target="_blank">ici</a></p>
         `,
       });
     } catch (emailError) {
