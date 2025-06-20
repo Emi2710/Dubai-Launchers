@@ -9,6 +9,7 @@ import Clients from "@/components/Clients";
 import About from "@/components/About";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import Faq from "@/components/Faq";
+import WhatsappButton from "@/components/ui/WhatsappButton";
 
 const Home = () => {
   return (
@@ -21,6 +22,7 @@ const Home = () => {
         <Clients />
         {/*<Faq />*/}
         <Footer />
+        <WhatsappButton />
       </div>
     </main>
   );

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-
+import ClientLayout from "@/components/ClientLayout";
 import "./globals.css";
-import { ThemeProvider } from "./provider";
-import WhatsappButton from "@/components/ui/WhatsappButton";
 
 export const metadata: Metadata = {
   title: "Dubaï Launchers - Votre société à Dubaï en un temps record",
@@ -21,15 +19,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo/2.png" sizes="any" />
       </head>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <WhatsappButton />
-        </ThemeProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
