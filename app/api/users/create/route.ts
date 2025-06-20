@@ -1,3 +1,4 @@
+import { generateWelcomeEmail } from "@/emails/WelcomeEmail";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -69,24 +70,32 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Send welcome email with Resend
+    // 3. Generate recovery link and send welcome email
     try {
+      const { data: resetLinkData, error: resetLinkError } =
+        await supabase.auth.admin.generateLink({
+          type: "recovery",
+          email,
+          options: {
+            redirectTo: "http://localhost:3000/login/reset-password", // change to your domain
+          },
+        });
+
+      const passwordLink = resetLinkData?.properties?.action_link;
+
+      if (!passwordLink)
+        throw new Error("Échec génération du lien de mot de passe.");
+
       await resend.emails.send({
-        from: "onboarding@resend.dev", // change this to your verified sender email
-        to: "delivered@resend.dev",
+        from: "noreply@dubailaunchers.com", // Replace with your sender domain
+        to: email,
         subject: `${first_name}, bienvenue sur Dubai Launchers!`,
-        html: `
-          <h1>Bienvenue sur notre plateforme ${first_name}!</h1>
-          <p>Nous sommes ravis de vous compter parmi nous.</p>
-          <p>Pour accéder à votre espace, veuillez d'abord créer votre mot de passe en suivant ce lien : <a href="https://localhost3000/login/forgot-password" target="_blank">ici</a></p>
-        `,
+        html: generateWelcomeEmail(first_name, passwordLink),
       });
     } catch (emailError) {
-      // If email sending fails, log but don't break
       console.error("Erreur envoi email:", emailError);
     }
 
-    // Success
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json(

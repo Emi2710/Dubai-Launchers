@@ -95,13 +95,6 @@ export default function AssignedManager({}: Props) {
     return first + last || "CM";
   };
 
-  const formatPhoneForWhatsApp = (phone?: string) => {
-    if (!phone) return "";
-    // Remove all non-numeric characters and add country code if needed
-    const cleaned = phone.replace(/\D/g, "");
-    return cleaned.startsWith("971") ? cleaned : `971${cleaned}`;
-  };
-
   const handleEmailClick = () => {
     if (manager?.email) {
       window.location.href = `mailto:${manager.email}?subject=Question concernant ma création d'entreprise à Dubai`;
@@ -110,13 +103,11 @@ export default function AssignedManager({}: Props) {
 
   const handleWhatsAppClick = () => {
     if (manager?.phone) {
-      const formattedPhone = formatPhoneForWhatsApp(manager.phone);
-
       const message = encodeURIComponent(
         `Bonjour, je suis ${profile?.first_name} ${profile?.last_name}. Je vous contacte depuis l’espace client Dubai Launchers. J’ai une question et je voulais échanger avec un membre de l’équipe.`
       );
 
-      window.open(`https://wa.me/${formattedPhone}?text=${message}`, "_blank");
+      window.open(`https://wa.me/${manager.phone}?text=${message}`, "_blank");
     }
   };
 

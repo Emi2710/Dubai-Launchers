@@ -1,3 +1,4 @@
+import { refusEmail } from "@/emails/Refus";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -15,14 +16,10 @@ export async function POST(req: Request) {
 
     try {
       await resend.emails.send({
-        from: "onboarding@resend.dev", // change this to your verified sender email
-        to: "delivered@resend.dev",
-        subject: `${email}, formulaire refusé`,
-        html: `
-          <h1>Bienvenue sur notre plateforme</h1>
-          <p>Nous sommes ravis de vous compter parmi nous.</p>
-          <p>Pour accéder à votre espace, veuillez d'abord créer votre mot de passe en suivant ce lien : <a href="https://localhost3000/login/forgot-password" target="_blank">ici</a></p>
-        `,
+        from: "noreply@dubailaunchers.com", // change this to your verified sender email
+        to: email,
+        subject: `Dubai Launchers: Vos documents ont été refusés.`,
+        html: refusEmail(),
       });
     } catch (emailError) {
       // If email sending fails, log but don't break

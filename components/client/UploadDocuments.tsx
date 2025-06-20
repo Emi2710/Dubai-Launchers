@@ -238,15 +238,19 @@ export default function UserProfileForm() {
       let passport_path = null;
       let idcard_path = null;
 
-      if (formData.passportFile && passportUrl) {
-        const oldPath = passportUrl.split(`${BUCKET_NAME}/`)[1]; // extrait le path
-        await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
+      if (formData.passportFile) {
+        if (passportUrl) {
+          const oldPath = passportUrl.split(`${BUCKET_NAME}/`)[1];
+          await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
+        }
         passport_path = await uploadFile(user.id, formData.passportFile);
       }
 
-      if (formData.idcardFile && idcardUrl) {
-        const oldPath = idcardUrl.split(`${BUCKET_NAME}/`)[1];
-        await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
+      if (formData.idcardFile) {
+        if (idcardUrl) {
+          const oldPath = idcardUrl.split(`${BUCKET_NAME}/`)[1];
+          await supabase.storage.from(BUCKET_NAME).remove([oldPath]);
+        }
         idcard_path = await uploadFile(user.id, formData.idcardFile);
       }
 

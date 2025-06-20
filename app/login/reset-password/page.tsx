@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -39,7 +38,39 @@ export default function ResetPasswordPage() {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const router = useRouter();
 
-  // Calculate password strength
+  // ✅ Nouvelle logique : échange du token contre une session Supabase
+  useEffect(() => {
+    const exchangeSessionFromUrl = async () => {
+      const hash = window.location.hash;
+
+      if (hash && hash.includes("access_token")) {
+        const params = new URLSearchParams(hash.slice(1)); // Remove the "#"
+        const access_token = params.get("access_token");
+        const refresh_token = params.get("refresh_token");
+
+        if (access_token && refresh_token) {
+          const { error } = await supabase.auth.setSession({
+            access_token,
+            refresh_token,
+          });
+
+          if (error) {
+            console.error(
+              "Erreur d'initialisation de session :",
+              error.message
+            );
+          } else {
+            console.log("Session Supabase initialisée avec succès.");
+            router.replace("/login/reset-password"); // nettoie l’URL
+          }
+        }
+      }
+    };
+
+    exchangeSessionFromUrl();
+  }, [router]);
+
+  // Calcul force du mot de passe
   useEffect(() => {
     if (!password) {
       setPasswordStrength(0);
@@ -47,13 +78,9 @@ export default function ResetPasswordPage() {
     }
 
     let strength = 0;
-    // Length check
     if (password.length >= 8) strength += 25;
-    // Contains uppercase
     if (/[A-Z]/.test(password)) strength += 25;
-    // Contains lowercase
     if (/[a-z]/.test(password)) strength += 25;
-    // Contains number or special char
     if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 25;
 
     setPasswordStrength(strength);
@@ -76,7 +103,6 @@ export default function ResetPasswordPage() {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (password.length < 8) {
       setMessage("Le mot de passe doit contenir au moins 8 caractères.");
       setMessageType("error");
@@ -101,11 +127,8 @@ export default function ResetPasswordPage() {
       }
 
       setMessageType("success");
-      setMessage(
-        "Mot de passe modifié avec succès. Redirection vers la page de connexion..."
-      );
+      setMessage("Mot de passe modifié avec succès. Redirection en cours...");
 
-      // Start progress bar for redirection
       let progress = 0;
       const interval = setInterval(() => {
         progress += 2;
@@ -114,7 +137,7 @@ export default function ResetPasswordPage() {
           clearInterval(interval);
           router.push("/login");
         }
-      }, 40); // 2000ms / 50 steps = 40ms per step
+      }, 40);
     } catch (error: any) {
       setMessageType("error");
       setMessage(`Erreur : ${error.message || "Une erreur est survenue"}`);
