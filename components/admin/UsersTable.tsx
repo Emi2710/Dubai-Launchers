@@ -115,6 +115,29 @@ export default function UsersTable() {
     fetchUsers();
   }, []);
 
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm("Supprimer cet utilisateur et toutes ses données ?")) return;
+
+    try {
+      const res = await fetch("/api/admin/delete-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      const result = await res.json();
+      if (result.error) {
+        alert("Erreur : " + result.error);
+      } else {
+        alert("Utilisateur supprimé.");
+        fetchUsers();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de la suppression.");
+    }
+  };
+
   // Handle search and filtering
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -483,11 +506,32 @@ export default function UsersTable() {
                       <TableCell>{getRoleBadge(user.role)}</TableCell>
                       <TableCell>{getStatusBadge(user.active)}</TableCell>
                       <TableCell>
-                        <Link
-                          href={`/admin/utilisateurs/${user.user_id}/update`}
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                        </Link>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                (window.location.href = `/admin/utilisateurs/${user.user_id}/update`)
+                              }
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              Voir
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDeleteUser(user.user_id)}
+                              className="text-red-500"
+                            >
+                              <UserX className="mr-2 h-4 w-4" />
+                              Supprimer
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))
@@ -546,6 +590,15 @@ export default function UsersTable() {
                             {getStatusBadge(user.active)}
                           </div>
                         </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="mt-8"
+                          onClick={() => handleDeleteUser(user.user_id)}
+                        >
+                          <UserX className="h-4 w-4 mr-2" />
+                          Supprimer
+                        </Button>
                       </div>
                     </CardContent>{" "}
                   </Link>
