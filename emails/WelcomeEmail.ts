@@ -1,7 +1,7 @@
 export function generateWelcomeEmail(first_name: string, passwordLink: string) {
   return `
   <!DOCTYPE html>
-  <html lang="en" style="background-color:#1a1b3a;">
+  <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
