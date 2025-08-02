@@ -277,6 +277,7 @@ export default function UserAppointments() {
                   >
                     <Link
                       href={appt.action_url}
+                      target="_blank"
                       className="flex items-center justify-center gap-1 text-xs sm:text-sm"
                     >
                       {appt.action_text}

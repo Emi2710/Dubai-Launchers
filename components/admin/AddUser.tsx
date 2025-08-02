@@ -26,7 +26,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
     phone: "",
     role: "client",
     calendly_link: "",
-    assigned_to: "",
+    assigned_to: "none",
   });
 
   const [chargés, setChargés] = useState<any[]>([]);
@@ -45,10 +45,8 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
       if (error) {
         console.error("Erreur Supabase :", error);
       } else {
-        console.log("Chargés de compte récupérés :", data);
+        setChargés(data || []);
       }
-
-      setChargés(data || []);
     };
     fetchChargés();
   }, []);
@@ -59,13 +57,23 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
     setMessage("");
     setIsError(false);
 
+    const cleanedForm = {
+      ...form,
+      calendly_link:
+        form.role === "charge_de_compte" ? form.calendly_link : undefined,
+      assigned_to:
+        form.role === "client" && form.assigned_to !== "none"
+          ? form.assigned_to
+          : null,
+    };
+
     try {
       const res = await fetch("/api/users/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(cleanedForm),
       });
 
       const data = await res.json();
@@ -84,8 +92,9 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
           phone: "",
           role: "client",
           calendly_link: "",
-          assigned_to: "",
+          assigned_to: "none",
         });
+        onSuccess?.();
       }
     } catch (err: any) {
       setIsError(true);
@@ -179,28 +188,21 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
 
       {form.role === "client" && (
         <div className="space-y-2">
-          <Label htmlFor="assigned_to">
-            Chargé de compte <span className="text-red-500">*</span>
-          </Label>
+          <Label htmlFor="assigned_to">Chargé de compte (optionnel)</Label>
           <Select
             value={form.assigned_to}
             onValueChange={(value) => setForm({ ...form, assigned_to: value })}
           >
             <SelectTrigger id="assigned_to">
-              <SelectValue placeholder="Sélectionner un chargé de compte" />
+              <SelectValue placeholder="Aucun" />
             </SelectTrigger>
             <SelectContent>
-              {chargés.length > 0 ? (
-                chargés.map((c) => (
-                  <SelectItem key={c.user_id} value={c.user_id}>
-                    {c.first_name} {c.last_name}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="none" disabled>
-                  Aucun chargé disponible
+              <SelectItem value="none">Aucun</SelectItem>
+              {chargés.map((c) => (
+                <SelectItem key={c.user_id} value={c.user_id}>
+                  {c.first_name} {c.last_name}
                 </SelectItem>
-              )}
+              ))}
             </SelectContent>
           </Select>
         </div>

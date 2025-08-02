@@ -23,7 +23,7 @@ export function generateWelcomeEmail(first_name: string, passwordLink: string) {
           Pour accéder à votre espace Dubai Launchers, veuillez d'abord créer votre mot de passe en cliquant sur le bouton ci-dessous.
         </p>
   
-        <a href="${passwordLink}" style="display:inline-block; background:linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); color:white; text-decoration:none; padding:16px 32px; border-radius:12px; font-weight:600; font-size:16px; margin:20px 0; box-shadow:0 4px 15px rgba(168,85,247,0.3);">
+        <a href="${passwordLink}/login/reset-password" style="display:inline-block; background:linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); color:white; text-decoration:none; padding:16px 32px; border-radius:12px; font-weight:600; font-size:16px; margin:20px 0; box-shadow:0 4px 15px rgba(168,85,247,0.3);">
           Créer votre mot de passe <span style="margin-left:8px;">→</span>
         </a>
   

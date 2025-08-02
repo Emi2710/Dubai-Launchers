@@ -10,6 +10,7 @@ import About from "@/components/About";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import Faq from "@/components/Faq";
 import WhatsappButton from "@/components/ui/WhatsappButton";
+import { useEffect } from "react";
 
 const Home = () => {
   return (

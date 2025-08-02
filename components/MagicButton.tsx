@@ -24,7 +24,7 @@ const MagicButton = ({
 }) => {
   return (
     <Link
-      href="#"
+      href="https://calendly.com/contact-dubailaunchers/30min"
       target="_blank"
       className="relative inline-flex h-12 w-fit overflow-hidden rounded-lg p-[1px] focus:outline-none"
     >

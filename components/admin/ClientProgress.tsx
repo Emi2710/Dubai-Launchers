@@ -10,9 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle2, Clock, Loader2 } from "lucide-react";
+import { CheckCircle2, Clock, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
 const steps = [
   "Analyse et Préparation",
@@ -76,20 +75,24 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
 
   const updateDate = async (step: string, date: string) => {
     const currentStatus = progress[step]?.status ?? "à venir";
+    const formattedDate = date === "" ? null : date;
 
-    const { error } = await supabase
-      .from("business_progress")
-      .upsert(
-        { client_id: clientId, step, status: currentStatus, date },
-        { onConflict: "client_id,step" }
-      );
+    const { error } = await supabase.from("business_progress").upsert(
+      {
+        client_id: clientId,
+        step,
+        status: currentStatus,
+        date: formattedDate,
+      },
+      { onConflict: "client_id,step" }
+    );
 
     if (error) {
       alert("Erreur mise à jour de la date: " + error.message);
     } else {
       setProgress((prev) => ({
         ...prev,
-        [step]: { ...(prev[step] || {}), date },
+        [step]: { ...(prev[step] || {}), date: formattedDate },
       }));
     }
   };
@@ -163,10 +166,20 @@ export default function ClientProgress({ clientId }: { clientId: string }) {
                   </label>
                   <input
                     type="date"
-                    value={currentDate ? currentDate : ""}
+                    value={currentDate}
                     onChange={(e) => updateDate(step, e.target.value)}
                     className="border rounded px-2 py-1 text-sm"
                   />
+                  {currentDate && (
+                    <button
+                      type="button"
+                      onClick={() => updateDate(step, "")}
+                      className="text-sm text-red-500 hover:underline flex items-center gap-1"
+                    >
+                      <X className="w-4 h-4" />
+                      Effacer
+                    </button>
+                  )}
                 </div>
               </div>
             );

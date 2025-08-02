@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import ClientLayout from "@/components/ClientLayout";
 import "./globals.css";
@@ -14,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" className="fade-in" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo/2.png" sizes="any" />
       </head>
