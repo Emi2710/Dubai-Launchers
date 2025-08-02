@@ -3,7 +3,7 @@ import BentoGridTimeline from "./ui/BentoGridTimeline";
 
 const Grid = () => {
   return (
-    <section id="guide">
+    <section>
       <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mt-20">
         Comment ça marche ?
       </h2>

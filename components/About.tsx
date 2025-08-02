@@ -54,7 +54,7 @@ const About = () => {
   }
 
   return (
-    <div id="about" className="relative py-16">
+    <div className="relative py-16">
       <h2 className="font-bold text-3xl md:text-5xl text-center z-[5000] mb-10 text-white">
         Pourquoi nous ?
       </h2>

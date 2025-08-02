@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import MagicButton from "../MagicButton";
-import { FaLocationArrow, FaBars, FaXmark } from "react-icons/fa6"; // FaXmark au lieu de FaTimes
+import { FaLocationArrow, FaBars, FaXmark } from "react-icons/fa6";
 
 export const FloatingNav = ({
   navItems,
@@ -33,6 +33,37 @@ export const FloatingNav = ({
       setVisible(scrollYProgress.get() < 0.05 || direction < 0);
     }
   });
+
+  // Fonction pour gérer le scroll vers les sections
+  const handleNavClick = (link: string, e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Fermer le menu mobile si ouvert
+    setIsMenuOpen(false);
+
+    // Si c'est un lien avec hash (ancre)
+    if (link.includes("#")) {
+      const sectionId = link.substring(1); // Enlever le #
+      const element = document.getElementById(sectionId);
+
+      if (element) {
+        // Calculer la position en tenant compte de votre navbar flottante
+        const navbarHeight = 100; // Ajustez selon votre design
+        const elementPosition = element.offsetTop - navbarHeight;
+
+        window.scrollTo({
+          top: elementPosition,
+          behavior: "smooth",
+        });
+
+        // Mettre à jour l'URL
+        window.history.pushState(null, "", link);
+      }
+    } else {
+      // Pour les liens normaux, utiliser la navigation Next.js
+      window.location.href = link;
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -81,6 +112,7 @@ export const FloatingNav = ({
             <Link
               key={`link=${idx}`}
               href={navItem.link}
+              onClick={(e) => handleNavClick(navItem.link, e)}
               className="relative dark:text-neutral-50 flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500 cursor-pointer"
             >
               <span className="block sm:hidden">{navItem.icon}</span>
@@ -117,7 +149,7 @@ export const FloatingNav = ({
                   key={`mobile-link=${idx}`}
                   href={navItem.link}
                   className="text-white text-lg block py-2 px-4 hover:bg-purple-800 rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => handleNavClick(navItem.link, e)}
                 >
                   {navItem.icon} {navItem.name}
                 </Link>
