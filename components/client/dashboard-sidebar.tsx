@@ -6,6 +6,8 @@ import {
   ArrowBigRightIcon,
   CalendarClock,
   Contact2,
+  DownloadCloudIcon,
+  Eye,
   FileText,
   Home,
   HomeIcon,
@@ -33,9 +35,14 @@ export function DashboardSidebar() {
       icon: HomeIcon,
     },
     {
-      title: "Mes documents et informations",
+      title: "Transmettre mes informations",
       href: "/client/documents",
       icon: FileText,
+    },
+    {
+      title: "Voir mes documents",
+      href: "/client/download",
+      icon: Eye,
     },
     {
       title: "Mes rendez-vous",

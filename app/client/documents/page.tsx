@@ -90,7 +90,7 @@ export default function Documents({}: Props) {
         {/* Main Content - Responsive Layout */}
         <div className="space-y-6">
           {/* Desktop: Side by side layout */}
-          <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
+          <div className=" lg:grid lg:grid-cols-1 lg:gap-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Upload className="w-5 h-5 text-primary" />
@@ -100,57 +100,6 @@ export default function Documents({}: Props) {
               </div>
               <UploadDocuments />
             </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-[40px]">
-                <Download className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-semibold ">Mes documents</h2>
-              </div>
-              <DownloadDocuments />
-            </div>
-          </div>
-
-          {/* Mobile/Tablet: Tabbed layout */}
-          <div className="lg:hidden">
-            <Tabs defaultValue="upload" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="upload" className="flex items-center gap-2">
-                  <Upload className="w-4 h-4" />
-                  <span className="hidden sm:inline">Télécharger</span>
-                  <span className="sm:hidden">Upload</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="download"
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  <span className="hidden sm:inline">Mes documents</span>
-                  <span className="sm:hidden">Fichiers</span>
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="upload" className="mt-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Upload className="w-5 h-5 text-primary" />
-                    <h2 className="text-xl font-semibold">
-                      Télécharger des documents
-                    </h2>
-                  </div>
-                  <UploadDocuments />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="download" className="mt-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Download className="w-5 h-5 text-primary" />
-                    <h2 className="text-xl font-semibold">Mes documents</h2>
-                  </div>
-                  <DownloadDocuments />
-                </div>
-              </TabsContent>
-            </Tabs>
           </div>
         </div>
       </div>

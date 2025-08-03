@@ -159,7 +159,7 @@ export default function ViewUserProfile() {
       .eq("user_id", userId);
 
     if (!error && profile) {
-      setProfile({ ...profile, active: false, comment: null });
+      setProfile({ ...profile, active: false, comment: "accepted" });
 
       const email = profile.email;
 

@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   Upload,
   FileText,
@@ -34,8 +33,9 @@ import {
   Calendar,
   Flag,
   Briefcase,
+  X,
+  ExternalLink,
 } from "lucide-react";
-import { da } from "date-fns/locale";
 
 type Gender = "Homme" | "Femme";
 
@@ -95,7 +95,6 @@ export default function UserProfileForm() {
   const [active, setActive] = useState<boolean | null>(null);
   const [comment, setComment] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-
   const [passportUrl, setPassportUrl] = useState<string | null>(null);
   const [idcardUrl, setIdcardUrl] = useState<string | null>(null);
 
@@ -152,6 +151,7 @@ export default function UserProfileForm() {
           maritalStatus: data.marital_status || "",
           arrivalDateDubai: data.arrival_date_dubai || "",
         }));
+
         setPassportUrl(data.passport_path);
         setIdcardUrl(data.idcard_path);
         setActive(data.active);
@@ -288,10 +288,9 @@ export default function UserProfileForm() {
         setMessage(
           "Il semble y avoir eu une erreur. Veuillez remplir tout les champs"
         );
-        /*console.log(`Failed to save profile: ${upsertError.message}`);*/
       } else {
         setMessage("Votre profil a été sauvegardé avec succès");
-        setActive(false); // also update local state
+        setActive(false);
         setFormData((prev) => ({
           ...prev,
           passportFile: null,
@@ -306,35 +305,26 @@ export default function UserProfileForm() {
     setUploading(false);
   }
 
-  // Désactiver le formulaire si active est false
   const isDisabled = active === false;
 
   const getStatusBadge = () => {
-    if (active === null) {
+    if (active === true && comment !== null) {
       return (
-        <Badge variant="secondary" className="gap-1">
-          <Clock className="w-3 h-3" />
-          En attente
+        <Badge variant="destructive" className="gap-1">
+          <AlertTriangle className="w-3 h-3" />
+          Refusé
         </Badge>
       );
     }
-    if (active === true) {
-      return (
-        <Badge
-          variant="default"
-          className="gap-1 bg-green-500 hover:bg-green-600"
-        >
-          <CheckCircle className="w-3 h-3" />
-          Approuvé
-        </Badge>
-      );
-    }
-    return (
-      <Badge variant="destructive" className="gap-1">
-        <AlertTriangle className="w-3 h-3" />
-        Refusé
-      </Badge>
-    );
+  };
+
+  const removeFile = (
+    name: keyof Pick<FormData, "passportFile" | "idcardFile">
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: null,
+    }));
   };
 
   const FileUploadField = ({
@@ -350,11 +340,16 @@ export default function UserProfileForm() {
     fileUrl?: string | null;
     disabled: boolean;
   }) => (
-    <div className="space-y-2">
-      <Label htmlFor={name} className="text-sm font-medium">
+    <div className="space-y-3">
+      <Label
+        htmlFor={name}
+        className="text-sm font-medium flex items-center gap-2"
+      >
+        <FileText className="w-4 h-4" />
         {label}
       </Label>
-      <div className="relative">
+
+      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg px-3 py-4 sm:p-4 transition-colors hover:border-muted-foreground/50">
         <Input
           id={name}
           type="file"
@@ -362,92 +357,105 @@ export default function UserProfileForm() {
           accept=".pdf,.doc,.docx,.txt"
           onChange={handleFileChange}
           disabled={disabled}
-          className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 min-h-[50px]"
+          className="file:mr-4 file:py-2 file:px-4 py-0 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 h-10 sm:h-11"
         />
-        {file && (
-          <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-            <FileText className="w-4 h-4" />
-            <span className="truncate">{file.name}</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => removeFile(name as "passportFile" | "idcardFile")}
-              className="text-gray-500 hover:text-red-700"
-            >
-              ✕
-            </Button>
 
-            {!file && fileUrl && (
-              <div className="mt-2 text-sm text-muted-foreground">
-                <a
-                  href={fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-blue-600 hover:text-blue-800"
-                >
-                  Voir le fichier existant
-                </a>
+        {file && (
+          <div className="mt-3 p-3 border rounded-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium truncate">{file.name}</span>
               </div>
-            )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  removeFile(name as "passportFile" | "idcardFile")
+                }
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 
-  const removeFile = (
-    name: keyof Pick<FormData, "passportFile" | "idcardFile">
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: null,
-    }));
-  };
+  const SectionHeader = ({
+    icon: Icon,
+    title,
+  }: {
+    icon: any;
+    title: string;
+  }) => (
+    <div className="flex items-center gap-3 pb-4">
+      <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg border">
+        <Icon className="w-4 h-4 text-primary" />
+      </div>
+      <h3 className="text-lg font-semibold">{title}</h3>
+    </div>
+  );
 
   return (
-    <div className="max-w-2xl mx-a p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5" />
-                Profil Utilisateur
-              </CardTitle>
-              <CardDescription className="pt-3">
-                Gérez vos informations personnelles et documents d&apos;identité
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Status Alert */}
-          {active === true && comment && (
-            <Alert className="mb-6 border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive">
-              <AlertDescription className="space-y-2">
-                <p className="font-medium">
-                  ⚠️ Vos documents ont été refusés. Merci de corriger et
-                  réessayer.
-                </p>
-                <div className="bg-destructive/10 p-3 rounded-md">
-                  <p className="text-sm">
-                    <strong>Commentaire :</strong> {comment}
-                  </p>
-                </div>
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold">
-                <Briefcase className="w-5 h-5" />
-                Informations de l&apos;entreprise
-              </div>
-
+    <div className="min-h-screen py-4 sm:py-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 space-y-4 sm:space-y-8">
+        {/* Header Card */}
+        <Card className="border">
+          <CardHeader className="p-4 sm:p-6">
+            <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div className="space-y-2">
-                <Label htmlFor="activity">Activité principale *</Label>
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border">
+                    <User className="w-5 h-5 text-primary" />
+                  </div>
+                  Profil Utilisateur
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Gérez vos informations personnelles et documents
+                  d&apos;identité
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-3">{getStatusBadge()}</div>
+            </div>
+          </CardHeader>
+        </Card>
+
+        {/* Status Alert */}
+        {active === true && comment && (
+          <Alert className="border-destructive/50">
+            <AlertDescription className="space-y-3">
+              <p className="font-medium text-destructive">
+                ⚠️ Vos documents ont été refusés. Merci de corriger et
+                réessayer.
+              </p>
+              <div className="p-4 rounded-lg border border-destructive/20">
+                <p className="text-sm">
+                  <strong>Commentaire :</strong> {comment}
+                </p>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Main Form */}
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8">
+          {/* Business Information */}
+          <Card className="border">
+            <CardHeader className="p-4 sm:p-6">
+              <SectionHeader
+                icon={Briefcase}
+                title="Informations de l'entreprise"
+              />
+            </CardHeader>
+            <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+              <div className="space-y-3">
+                <Label htmlFor="activity" className="text-sm font-medium">
+                  Activité principale *
+                </Label>
                 <Select
                   value={formData.activity}
                   onValueChange={(value) =>
@@ -455,7 +463,7 @@ export default function UserProfileForm() {
                   }
                   disabled={isDisabled}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-10 sm:h-11">
                     <SelectValue placeholder="Sélectionnez une activité" />
                   </SelectTrigger>
                   <SelectContent>
@@ -470,58 +478,61 @@ export default function UserProfileForm() {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="trade_name1">Nom commercial 1 *</Label>
-                  <Input
-                    id="trade_name1"
-                    name="trade_name1"
-                    value={formData.trade_name1}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Premier choix"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="trade_name2">Nom commercial 2*</Label>
-                  <Input
-                    id="trade_name2"
-                    name="trade_name2"
-                    value={formData.trade_name2}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Deuxième choix"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="trade_name3">Nom commercial 3*</Label>
-                  <Input
-                    id="trade_name3"
-                    name="trade_name3"
-                    value={formData.trade_name3}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Troisième choix"
-                  />
-                </div>
-              </div>
-              <p className="text-xs opacity-80 py-3">
-                *Remplissez en fonction de votre ordre de préférence
-              </p>
-            </div>
-            {/* Personal Information Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold">
-                <User className="w-5 h-5" />
-                Informations personnelles
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {[
+                  {
+                    id: "trade_name1",
+                    label: "Nom commercial 1 *",
+                    placeholder: "Premier choix",
+                  },
+                  {
+                    id: "trade_name2",
+                    label: "Nom commercial 2 *",
+                    placeholder: "Deuxième choix",
+                  },
+                  {
+                    id: "trade_name3",
+                    label: "Nom commercial 3 *",
+                    placeholder: "Troisième choix",
+                  },
+                ].map((field) => (
+                  <div key={field.id} className="space-y-3">
+                    <Label htmlFor={field.id} className="text-sm font-medium">
+                      {field.label}
+                    </Label>
+                    <Input
+                      id={field.id}
+                      name={field.id}
+                      value={formData[field.id as keyof FormData] as string}
+                      onChange={handleInputChange}
+                      disabled={isDisabled}
+                      required
+                      placeholder={field.placeholder}
+                      className="h-10 sm:h-11"
+                    />
+                  </div>
+                ))}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom *</Label>
+              <div className="p-3 sm:p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  💡 Remplissez en fonction de votre ordre de préférence
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Information */}
+          <Card className="border">
+            <CardHeader className="p-4 sm:p-6">
+              <SectionHeader icon={User} title="Informations personnelles" />
+            </CardHeader>
+            <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="space-y-3">
+                  <Label htmlFor="firstName" className="text-sm font-medium">
+                    Prénom *
+                  </Label>
                   <Input
                     id="firstName"
                     name="firstName"
@@ -530,11 +541,14 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                     placeholder="Votre prénom"
+                    className="h-10 sm:h-11"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom *</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="lastName" className="text-sm font-medium">
+                    Nom *
+                  </Label>
                   <Input
                     id="lastName"
                     name="lastName"
@@ -543,11 +557,14 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                     placeholder="Votre nom"
+                    className="h-10 sm:h-11"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Genre *</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="gender" className="text-sm font-medium">
+                    Genre *
+                  </Label>
                   <Select
                     value={formData.gender}
                     onValueChange={(value) =>
@@ -555,7 +572,7 @@ export default function UserProfileForm() {
                     }
                     disabled={isDisabled}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-10 sm:h-11">
                       <SelectValue placeholder="Sélectionnez votre genre" />
                     </SelectTrigger>
                     <SelectContent>
@@ -565,8 +582,11 @@ export default function UserProfileForm() {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="dob" className="flex items-center gap-1 mt-2">
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="dob"
+                    className="text-sm font-medium flex items-center gap-2"
+                  >
                     <Calendar className="w-4 h-4" />
                     Date de naissance *
                   </Label>
@@ -578,11 +598,16 @@ export default function UserProfileForm() {
                     onChange={handleInputChange}
                     required
                     disabled={isDisabled}
+                    className="h-10 sm:h-11"
                   />
                 </div>
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="residenceAddress">
-                    Adresse postale (pays de résidence)*
+
+                <div className="space-y-3 lg:col-span-2">
+                  <Label
+                    htmlFor="residenceAddress"
+                    className="text-sm font-medium"
+                  >
+                    Adresse postale (pays de résidence) *
                   </Label>
                   <Input
                     id="residenceAddress"
@@ -592,90 +617,73 @@ export default function UserProfileForm() {
                     disabled={isDisabled}
                     required
                     placeholder="Adresse complète"
+                    className="h-10 sm:h-11"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Adresse email*</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="votre@email.com"
-                  />
-                </div>
+                {[
+                  {
+                    id: "email",
+                    label: "Adresse email *",
+                    type: "email",
+                    placeholder: "votre@email.com",
+                  },
+                  {
+                    id: "mobileNumber",
+                    label: "Numéro de téléphone *",
+                    type: "tel",
+                    placeholder: "+971...",
+                  },
+                  {
+                    id: "lastDiploma",
+                    label: "Dernier diplôme obtenu *",
+                    type: "text",
+                    placeholder: "Ex. Licence, Master...",
+                  },
+                  {
+                    id: "dadName",
+                    label: "Nom du père *",
+                    type: "text",
+                    placeholder: "Nom du père",
+                  },
+                  {
+                    id: "momName",
+                    label: "Nom de la mère *",
+                    type: "text",
+                    placeholder: "Nom de la mère",
+                  },
+                  {
+                    id: "religion",
+                    label: "Religion *",
+                    type: "text",
+                    placeholder: "Votre religion",
+                  },
+                ].map((field) => (
+                  <div key={field.id} className="space-y-3">
+                    <Label htmlFor={field.id} className="text-sm font-medium">
+                      {field.label}
+                    </Label>
+                    <Input
+                      id={field.id}
+                      name={field.id}
+                      type={field.type}
+                      value={formData[field.id as keyof FormData] as string}
+                      onChange={handleInputChange}
+                      disabled={isDisabled}
+                      required
+                      placeholder={field.placeholder}
+                      className="h-10 sm:h-11"
+                    />
+                  </div>
+                ))}
 
-                <div className="space-y-2">
-                  <Label htmlFor="mobileNumber">Numéro de téléphone*</Label>
-                  <Input
-                    id="mobileNumber"
-                    name="mobileNumber"
-                    type="tel"
-                    value={formData.mobileNumber}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="+971..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastDiploma">Dernier diplôme obtenu*</Label>
-                  <Input
-                    id="lastDiploma"
-                    name="lastDiploma"
-                    value={formData.lastDiploma}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Ex. Licence, Master..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="dadName">Nom du père*</Label>
-                  <Input
-                    id="dadName"
-                    name="dadName"
-                    value={formData.dadName}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Nom du père"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="momName">Nom de la mère*</Label>
-                  <Input
-                    id="momName"
-                    name="momName"
-                    value={formData.momName}
-                    onChange={handleInputChange}
-                    disabled={isDisabled}
-                    required
-                    placeholder="Nom de la mère"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="religion">Religion*</Label>
-                  <Input
-                    id="religion"
-                    name="religion"
-                    value={formData.religion}
-                    onChange={handleInputChange}
-                    required
-                    disabled={isDisabled}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="maritalStatus">Statut marital*</Label>
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="maritalStatus"
+                    className="text-sm font-medium"
+                  >
+                    Statut marital *
+                  </Label>
                   <Select
                     value={formData.maritalStatus}
                     onValueChange={(value) =>
@@ -684,7 +692,7 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-10 sm:h-11">
                       <SelectValue placeholder="Sélectionnez un statut" />
                     </SelectTrigger>
                     <SelectContent>
@@ -696,9 +704,12 @@ export default function UserProfileForm() {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="arrivalDateDubai">
-                    Date approximative d&apos;arrivée à Dubai*
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="arrivalDateDubai"
+                    className="text-sm font-medium"
+                  >
+                    Date approximative d&apos;arrivée à Dubai *
                   </Label>
                   <Input
                     id="arrivalDateDubai"
@@ -708,23 +719,24 @@ export default function UserProfileForm() {
                     onChange={handleInputChange}
                     required
                     disabled={isDisabled}
+                    className="h-10 sm:h-11"
                   />
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <Separator />
-
-            {/* Location Information Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold">
-                <MapPin className="w-5 h-5" />
-                Informations de naissance
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="placeOfBirth">Ville de naissance *</Label>
+          {/* Birth Information */}
+          <Card className="border">
+            <CardHeader className="p-4 sm:p-6">
+              <SectionHeader icon={MapPin} title="Informations de naissance" />
+            </CardHeader>
+            <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="space-y-3">
+                  <Label htmlFor="placeOfBirth" className="text-sm font-medium">
+                    Ville de naissance *
+                  </Label>
                   <Input
                     id="placeOfBirth"
                     name="placeOfBirth"
@@ -733,11 +745,14 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                     placeholder="Ville de naissance"
+                    className="h-10 sm:h-11"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="countryBirth">Pays de naissance *</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="countryBirth" className="text-sm font-medium">
+                    Pays de naissance *
+                  </Label>
                   <Input
                     id="countryBirth"
                     name="countryBirth"
@@ -746,13 +761,14 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                     placeholder="Pays de naissance"
+                    className="h-10 sm:h-11"
                   />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-3 lg:col-span-2">
                   <Label
                     htmlFor="nationality"
-                    className="flex items-center gap-1"
+                    className="text-sm font-medium flex items-center gap-2"
                   >
                     <Flag className="w-4 h-4" />
                     Nationalité *
@@ -765,24 +781,25 @@ export default function UserProfileForm() {
                     required
                     disabled={isDisabled}
                     placeholder="Votre nationalité"
+                    className="h-10 sm:h-11"
                   />
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <Separator />
-
-            {/* Documents Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold">
-                <FileText className="w-5 h-5" />
-                Documents d&apos;identité
+          {/* Documents */}
+          <Card className="border">
+            <CardHeader className="p-4 sm:p-6">
+              <SectionHeader icon={FileText} title="Documents d'identité" />
+              <div className="p-3 sm:p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  📄 Formats acceptés : PDF, DOC, DOCX, TXT
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Formats acceptés : PDF, DOC, DOCX, TXT
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            </CardHeader>
+            <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 <FileUploadField
                   name="passportFile"
                   label="Passeport"
@@ -790,7 +807,6 @@ export default function UserProfileForm() {
                   fileUrl={passportUrl}
                   disabled={isDisabled}
                 />
-
                 <FileUploadField
                   name="idcardFile"
                   label="Carte d'identité"
@@ -799,52 +815,61 @@ export default function UserProfileForm() {
                   disabled={isDisabled}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <Separator />
+          {/* Submit Section */}
+          <Card className="border">
+            <CardContent className="pt-6 p-4 sm:p-6">
+              <div className="space-y-6">
+                <Button
+                  type="submit"
+                  disabled={uploading || isDisabled}
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium"
+                  size="lg"
+                >
+                  {uploading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                      Sauvegarde en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Sauvegarder le profil
+                    </>
+                  )}
+                </Button>
 
-            {/* Submit Button */}
-            <div className="flex flex-col gap-4">
-              <Button
-                type="submit"
-                disabled={uploading || isDisabled}
-                className="w-full"
-                size="lg"
-              >
-                {uploading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                    Sauvegarde en cours...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="w-4 h-4 mr-2" />
-                    Sauvegarder le profil
-                  </>
+                {message && (
+                  <Alert
+                    className={
+                      message.includes("succès")
+                        ? "border-green-500/50"
+                        : "border-destructive/50"
+                    }
+                  >
+                    {message.includes("succès") ? (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <AlertTriangle className="h-4 w-4 text-destructive" />
+                    )}
+                    <AlertDescription
+                      className={
+                        message.includes("succès")
+                          ? "text-green-600"
+                          : "text-destructive"
+                      }
+                    >
+                      {message}
+                    </AlertDescription>
+                  </Alert>
                 )}
-              </Button>
-            </div>
-
-            {/* Success/Error Messages */}
-            {message && (
-              <Alert
-                className={
-                  message.includes("succès")
-                    ? "border-green-500 text-green-700"
-                    : "border-destructive text-destructive"
-                }
-              >
-                {message.includes("succès") ? (
-                  <CheckCircle className="h-4 w-4" />
-                ) : (
-                  <AlertTriangle className="h-4 w-4" />
-                )}
-                <AlertDescription>{message}</AlertDescription>
-              </Alert>
-            )}
-          </form>
-        </CardContent>
-      </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
+      </div>
     </div>
   );
 }

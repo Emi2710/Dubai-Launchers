@@ -147,7 +147,7 @@ export default function AssignedManager({}: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Alert>
+          <Alert className="border-0 bg-transparent">
             <UserX className="h-4 w-4" />
             <AlertDescription>
               Aucun chargé de compte n&apos;est actuellement assigné à votre
